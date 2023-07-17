@@ -1,0 +1,23 @@
+name: mhu_dart_proto
+version: 1.0.1-dev
+description: Protobuf stuff
+repository: https://github.com/maprohu/mhu_dart_proto
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  collection: ^1.17.1
+  protobuf: any
+  freezed_annotation: any
+  rxdart: any
+  fast_immutable_collections: any
+  mhu_dart_commons:
+    path: ../mhu_dart_commons
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
+  build_runner: any
+  freezed: any
+
