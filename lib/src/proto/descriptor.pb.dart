@@ -3,7 +3,7 @@
 //  source: descriptor.proto
 //
 // @dart = 2.12
-// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name
+// ignore_for_file: annotate_overrides,camel_case_types,constant_identifier_names,directives_ordering,library_prefixes,non_constant_identifier_names,prefer_final_fields,return_of_invalid_type,unnecessary_const,unnecessary_import,unnecessary_this,unused_import,unused_shown_name,depend_on_referenced_packages,no_leading_underscores_for_local_identifiers
 
 import 'dart:core' as $core;
 
@@ -493,17 +493,135 @@ class DescriptorProto extends $pb.GeneratedMessage {
   $core.List<$core.String> get reservedName => $_getList(9);
 }
 
+class ExtensionRangeOptions_Declaration extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ExtensionRangeOptions.Declaration', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'google.protobuf'), createEmptyInstance: create)
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'number', $pb.PbFieldType.O3)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fullName')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type')
+    ..aOB(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'reserved')
+    ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'repeated')
+    ..hasRequiredFields = false
+  ;
+
+  ExtensionRangeOptions_Declaration._() : super();
+  factory ExtensionRangeOptions_Declaration({
+    $core.int? number,
+    $core.String? fullName,
+    $core.String? type,
+    $core.bool? reserved,
+    $core.bool? repeated,
+  }) {
+    final _result = create();
+    if (number != null) {
+      _result.number = number;
+    }
+    if (fullName != null) {
+      _result.fullName = fullName;
+    }
+    if (type != null) {
+      _result.type = type;
+    }
+    if (reserved != null) {
+      _result.reserved = reserved;
+    }
+    if (repeated != null) {
+      _result.repeated = repeated;
+    }
+    return _result;
+  }
+  factory ExtensionRangeOptions_Declaration.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ExtensionRangeOptions_Declaration.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ExtensionRangeOptions_Declaration clone() => ExtensionRangeOptions_Declaration()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ExtensionRangeOptions_Declaration copyWith(void Function(ExtensionRangeOptions_Declaration) updates) => super.copyWith((message) => updates(message as ExtensionRangeOptions_Declaration)) as ExtensionRangeOptions_Declaration; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ExtensionRangeOptions_Declaration create() => ExtensionRangeOptions_Declaration._();
+  ExtensionRangeOptions_Declaration createEmptyInstance() => create();
+  static $pb.PbList<ExtensionRangeOptions_Declaration> createRepeated() => $pb.PbList<ExtensionRangeOptions_Declaration>();
+  @$core.pragma('dart2js:noInline')
+  static ExtensionRangeOptions_Declaration getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ExtensionRangeOptions_Declaration>(create);
+  static ExtensionRangeOptions_Declaration? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get number => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set number($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasNumber() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearNumber() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get fullName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set fullName($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasFullName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFullName() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get type => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set type($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasType() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearType() => clearField(3);
+
+  @$pb.TagNumber(5)
+  $core.bool get reserved => $_getBF(3);
+  @$pb.TagNumber(5)
+  set reserved($core.bool v) { $_setBool(3, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasReserved() => $_has(3);
+  @$pb.TagNumber(5)
+  void clearReserved() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get repeated => $_getBF(4);
+  @$pb.TagNumber(6)
+  set repeated($core.bool v) { $_setBool(4, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasRepeated() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearRepeated() => clearField(6);
+}
+
 class ExtensionRangeOptions extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ExtensionRangeOptions', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'google.protobuf'), createEmptyInstance: create)
+    ..pc<ExtensionRangeOptions_Declaration>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'declaration', $pb.PbFieldType.PM, subBuilder: ExtensionRangeOptions_Declaration.create)
+    ..e<ExtensionRangeOptions_VerificationState>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'verification', $pb.PbFieldType.OE, defaultOrMaker: ExtensionRangeOptions_VerificationState.UNVERIFIED, valueOf: ExtensionRangeOptions_VerificationState.valueOf, enumValues: ExtensionRangeOptions_VerificationState.values)
+    ..aOM<FeatureSet>(50, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'features', subBuilder: FeatureSet.create)
     ..pc<UninterpretedOption>(999, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uninterpretedOption', $pb.PbFieldType.PM, subBuilder: UninterpretedOption.create)
     ..hasExtensions = true
   ;
 
   ExtensionRangeOptions._() : super();
   factory ExtensionRangeOptions({
+    $core.Iterable<ExtensionRangeOptions_Declaration>? declaration,
+    ExtensionRangeOptions_VerificationState? verification,
+    FeatureSet? features,
     $core.Iterable<UninterpretedOption>? uninterpretedOption,
   }) {
     final _result = create();
+    if (declaration != null) {
+      _result.declaration.addAll(declaration);
+    }
+    if (verification != null) {
+      _result.verification = verification;
+    }
+    if (features != null) {
+      _result.features = features;
+    }
     if (uninterpretedOption != null) {
       _result.uninterpretedOption.addAll(uninterpretedOption);
     }
@@ -530,8 +648,31 @@ class ExtensionRangeOptions extends $pb.GeneratedMessage {
   static ExtensionRangeOptions getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ExtensionRangeOptions>(create);
   static ExtensionRangeOptions? _defaultInstance;
 
+  @$pb.TagNumber(2)
+  $core.List<ExtensionRangeOptions_Declaration> get declaration => $_getList(0);
+
+  @$pb.TagNumber(3)
+  ExtensionRangeOptions_VerificationState get verification => $_getN(1);
+  @$pb.TagNumber(3)
+  set verification(ExtensionRangeOptions_VerificationState v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasVerification() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearVerification() => clearField(3);
+
+  @$pb.TagNumber(50)
+  FeatureSet get features => $_getN(2);
+  @$pb.TagNumber(50)
+  set features(FeatureSet v) { setField(50, v); }
+  @$pb.TagNumber(50)
+  $core.bool hasFeatures() => $_has(2);
+  @$pb.TagNumber(50)
+  void clearFeatures() => clearField(50);
+  @$pb.TagNumber(50)
+  FeatureSet ensureFeatures() => $_ensure(2);
+
   @$pb.TagNumber(999)
-  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(0);
+  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(3);
 }
 
 class FieldDescriptorProto extends $pb.GeneratedMessage {
@@ -1217,6 +1358,7 @@ class FileOptions extends $pb.GeneratedMessage {
     ..aOB(42, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'phpGenericServices')
     ..aOS(44, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'phpMetadataNamespace')
     ..aOS(45, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rubyPackage')
+    ..aOM<FeatureSet>(50, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'features', subBuilder: FeatureSet.create)
     ..pc<UninterpretedOption>(999, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uninterpretedOption', $pb.PbFieldType.PM, subBuilder: UninterpretedOption.create)
     ..hasExtensions = true
   ;
@@ -1244,6 +1386,7 @@ class FileOptions extends $pb.GeneratedMessage {
     $core.bool? phpGenericServices,
     $core.String? phpMetadataNamespace,
     $core.String? rubyPackage,
+    FeatureSet? features,
     $core.Iterable<UninterpretedOption>? uninterpretedOption,
   }) {
     final _result = create();
@@ -1307,6 +1450,9 @@ class FileOptions extends $pb.GeneratedMessage {
     }
     if (rubyPackage != null) {
       _result.rubyPackage = rubyPackage;
+    }
+    if (features != null) {
+      _result.features = features;
     }
     if (uninterpretedOption != null) {
       _result.uninterpretedOption.addAll(uninterpretedOption);
@@ -1518,8 +1664,19 @@ class FileOptions extends $pb.GeneratedMessage {
   @$pb.TagNumber(45)
   void clearRubyPackage() => clearField(45);
 
+  @$pb.TagNumber(50)
+  FeatureSet get features => $_getN(20);
+  @$pb.TagNumber(50)
+  set features(FeatureSet v) { setField(50, v); }
+  @$pb.TagNumber(50)
+  $core.bool hasFeatures() => $_has(20);
+  @$pb.TagNumber(50)
+  void clearFeatures() => clearField(50);
+  @$pb.TagNumber(50)
+  FeatureSet ensureFeatures() => $_ensure(20);
+
   @$pb.TagNumber(999)
-  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(20);
+  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(21);
 }
 
 class MessageOptions extends $pb.GeneratedMessage {
@@ -1529,6 +1686,7 @@ class MessageOptions extends $pb.GeneratedMessage {
     ..aOB(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deprecated')
     ..aOB(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'mapEntry')
     ..aOB(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deprecatedLegacyJsonFieldConflicts')
+    ..aOM<FeatureSet>(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'features', subBuilder: FeatureSet.create)
     ..pc<UninterpretedOption>(999, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uninterpretedOption', $pb.PbFieldType.PM, subBuilder: UninterpretedOption.create)
     ..hasExtensions = true
   ;
@@ -1541,6 +1699,7 @@ class MessageOptions extends $pb.GeneratedMessage {
     $core.bool? mapEntry,
   @$core.Deprecated('This field is deprecated.')
     $core.bool? deprecatedLegacyJsonFieldConflicts,
+    FeatureSet? features,
     $core.Iterable<UninterpretedOption>? uninterpretedOption,
   }) {
     final _result = create();
@@ -1559,6 +1718,9 @@ class MessageOptions extends $pb.GeneratedMessage {
     if (deprecatedLegacyJsonFieldConflicts != null) {
       // ignore: deprecated_member_use_from_same_package
       _result.deprecatedLegacyJsonFieldConflicts = deprecatedLegacyJsonFieldConflicts;
+    }
+    if (features != null) {
+      _result.features = features;
     }
     if (uninterpretedOption != null) {
       _result.uninterpretedOption.addAll(uninterpretedOption);
@@ -1635,8 +1797,80 @@ class MessageOptions extends $pb.GeneratedMessage {
   @$pb.TagNumber(11)
   void clearDeprecatedLegacyJsonFieldConflicts() => clearField(11);
 
+  @$pb.TagNumber(12)
+  FeatureSet get features => $_getN(5);
+  @$pb.TagNumber(12)
+  set features(FeatureSet v) { setField(12, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasFeatures() => $_has(5);
+  @$pb.TagNumber(12)
+  void clearFeatures() => clearField(12);
+  @$pb.TagNumber(12)
+  FeatureSet ensureFeatures() => $_ensure(5);
+
   @$pb.TagNumber(999)
-  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(5);
+  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(6);
+}
+
+class FieldOptions_EditionDefault extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'FieldOptions.EditionDefault', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'google.protobuf'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'edition')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'value')
+    ..hasRequiredFields = false
+  ;
+
+  FieldOptions_EditionDefault._() : super();
+  factory FieldOptions_EditionDefault({
+    $core.String? edition,
+    $core.String? value,
+  }) {
+    final _result = create();
+    if (edition != null) {
+      _result.edition = edition;
+    }
+    if (value != null) {
+      _result.value = value;
+    }
+    return _result;
+  }
+  factory FieldOptions_EditionDefault.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory FieldOptions_EditionDefault.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  FieldOptions_EditionDefault clone() => FieldOptions_EditionDefault()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  FieldOptions_EditionDefault copyWith(void Function(FieldOptions_EditionDefault) updates) => super.copyWith((message) => updates(message as FieldOptions_EditionDefault)) as FieldOptions_EditionDefault; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static FieldOptions_EditionDefault create() => FieldOptions_EditionDefault._();
+  FieldOptions_EditionDefault createEmptyInstance() => create();
+  static $pb.PbList<FieldOptions_EditionDefault> createRepeated() => $pb.PbList<FieldOptions_EditionDefault>();
+  @$core.pragma('dart2js:noInline')
+  static FieldOptions_EditionDefault getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FieldOptions_EditionDefault>(create);
+  static FieldOptions_EditionDefault? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get edition => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set edition($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasEdition() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearEdition() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get value => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set value($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasValue() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearValue() => clearField(2);
 }
 
 class FieldOptions extends $pb.GeneratedMessage {
@@ -1650,7 +1884,9 @@ class FieldOptions extends $pb.GeneratedMessage {
     ..aOB(15, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'unverifiedLazy')
     ..aOB(16, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'debugRedact')
     ..e<FieldOptions_OptionRetention>(17, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'retention', $pb.PbFieldType.OE, defaultOrMaker: FieldOptions_OptionRetention.RETENTION_UNKNOWN, valueOf: FieldOptions_OptionRetention.valueOf, enumValues: FieldOptions_OptionRetention.values)
-    ..e<FieldOptions_OptionTargetType>(18, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'target', $pb.PbFieldType.OE, defaultOrMaker: FieldOptions_OptionTargetType.TARGET_TYPE_UNKNOWN, valueOf: FieldOptions_OptionTargetType.valueOf, enumValues: FieldOptions_OptionTargetType.values)
+    ..pc<FieldOptions_OptionTargetType>(19, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'targets', $pb.PbFieldType.PE, valueOf: FieldOptions_OptionTargetType.valueOf, enumValues: FieldOptions_OptionTargetType.values, defaultEnumValue: FieldOptions_OptionTargetType.TARGET_TYPE_UNKNOWN)
+    ..pc<FieldOptions_EditionDefault>(20, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'editionDefaults', $pb.PbFieldType.PM, subBuilder: FieldOptions_EditionDefault.create)
+    ..aOM<FeatureSet>(21, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'features', subBuilder: FeatureSet.create)
     ..pc<UninterpretedOption>(999, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uninterpretedOption', $pb.PbFieldType.PM, subBuilder: UninterpretedOption.create)
     ..hasExtensions = true
   ;
@@ -1666,7 +1902,9 @@ class FieldOptions extends $pb.GeneratedMessage {
     $core.bool? unverifiedLazy,
     $core.bool? debugRedact,
     FieldOptions_OptionRetention? retention,
-    FieldOptions_OptionTargetType? target,
+    $core.Iterable<FieldOptions_OptionTargetType>? targets,
+    $core.Iterable<FieldOptions_EditionDefault>? editionDefaults,
+    FeatureSet? features,
     $core.Iterable<UninterpretedOption>? uninterpretedOption,
   }) {
     final _result = create();
@@ -1697,8 +1935,14 @@ class FieldOptions extends $pb.GeneratedMessage {
     if (retention != null) {
       _result.retention = retention;
     }
-    if (target != null) {
-      _result.target = target;
+    if (targets != null) {
+      _result.targets.addAll(targets);
+    }
+    if (editionDefaults != null) {
+      _result.editionDefaults.addAll(editionDefaults);
+    }
+    if (features != null) {
+      _result.features = features;
     }
     if (uninterpretedOption != null) {
       _result.uninterpretedOption.addAll(uninterpretedOption);
@@ -1807,30 +2051,43 @@ class FieldOptions extends $pb.GeneratedMessage {
   @$pb.TagNumber(17)
   void clearRetention() => clearField(17);
 
-  @$pb.TagNumber(18)
-  FieldOptions_OptionTargetType get target => $_getN(9);
-  @$pb.TagNumber(18)
-  set target(FieldOptions_OptionTargetType v) { setField(18, v); }
-  @$pb.TagNumber(18)
-  $core.bool hasTarget() => $_has(9);
-  @$pb.TagNumber(18)
-  void clearTarget() => clearField(18);
+  @$pb.TagNumber(19)
+  $core.List<FieldOptions_OptionTargetType> get targets => $_getList(9);
+
+  @$pb.TagNumber(20)
+  $core.List<FieldOptions_EditionDefault> get editionDefaults => $_getList(10);
+
+  @$pb.TagNumber(21)
+  FeatureSet get features => $_getN(11);
+  @$pb.TagNumber(21)
+  set features(FeatureSet v) { setField(21, v); }
+  @$pb.TagNumber(21)
+  $core.bool hasFeatures() => $_has(11);
+  @$pb.TagNumber(21)
+  void clearFeatures() => clearField(21);
+  @$pb.TagNumber(21)
+  FeatureSet ensureFeatures() => $_ensure(11);
 
   @$pb.TagNumber(999)
-  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(10);
+  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(12);
 }
 
 class OneofOptions extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'OneofOptions', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'google.protobuf'), createEmptyInstance: create)
+    ..aOM<FeatureSet>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'features', subBuilder: FeatureSet.create)
     ..pc<UninterpretedOption>(999, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uninterpretedOption', $pb.PbFieldType.PM, subBuilder: UninterpretedOption.create)
     ..hasExtensions = true
   ;
 
   OneofOptions._() : super();
   factory OneofOptions({
+    FeatureSet? features,
     $core.Iterable<UninterpretedOption>? uninterpretedOption,
   }) {
     final _result = create();
+    if (features != null) {
+      _result.features = features;
+    }
     if (uninterpretedOption != null) {
       _result.uninterpretedOption.addAll(uninterpretedOption);
     }
@@ -1857,8 +2114,19 @@ class OneofOptions extends $pb.GeneratedMessage {
   static OneofOptions getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<OneofOptions>(create);
   static OneofOptions? _defaultInstance;
 
+  @$pb.TagNumber(1)
+  FeatureSet get features => $_getN(0);
+  @$pb.TagNumber(1)
+  set features(FeatureSet v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasFeatures() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFeatures() => clearField(1);
+  @$pb.TagNumber(1)
+  FeatureSet ensureFeatures() => $_ensure(0);
+
   @$pb.TagNumber(999)
-  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(0);
+  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(1);
 }
 
 class EnumOptions extends $pb.GeneratedMessage {
@@ -1866,6 +2134,7 @@ class EnumOptions extends $pb.GeneratedMessage {
     ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'allowAlias')
     ..aOB(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deprecated')
     ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deprecatedLegacyJsonFieldConflicts')
+    ..aOM<FeatureSet>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'features', subBuilder: FeatureSet.create)
     ..pc<UninterpretedOption>(999, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uninterpretedOption', $pb.PbFieldType.PM, subBuilder: UninterpretedOption.create)
     ..hasExtensions = true
   ;
@@ -1876,6 +2145,7 @@ class EnumOptions extends $pb.GeneratedMessage {
     $core.bool? deprecated,
   @$core.Deprecated('This field is deprecated.')
     $core.bool? deprecatedLegacyJsonFieldConflicts,
+    FeatureSet? features,
     $core.Iterable<UninterpretedOption>? uninterpretedOption,
   }) {
     final _result = create();
@@ -1888,6 +2158,9 @@ class EnumOptions extends $pb.GeneratedMessage {
     if (deprecatedLegacyJsonFieldConflicts != null) {
       // ignore: deprecated_member_use_from_same_package
       _result.deprecatedLegacyJsonFieldConflicts = deprecatedLegacyJsonFieldConflicts;
+    }
+    if (features != null) {
+      _result.features = features;
     }
     if (uninterpretedOption != null) {
       _result.uninterpretedOption.addAll(uninterpretedOption);
@@ -1946,13 +2219,26 @@ class EnumOptions extends $pb.GeneratedMessage {
   @$pb.TagNumber(6)
   void clearDeprecatedLegacyJsonFieldConflicts() => clearField(6);
 
+  @$pb.TagNumber(7)
+  FeatureSet get features => $_getN(3);
+  @$pb.TagNumber(7)
+  set features(FeatureSet v) { setField(7, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasFeatures() => $_has(3);
+  @$pb.TagNumber(7)
+  void clearFeatures() => clearField(7);
+  @$pb.TagNumber(7)
+  FeatureSet ensureFeatures() => $_ensure(3);
+
   @$pb.TagNumber(999)
-  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(3);
+  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(4);
 }
 
 class EnumValueOptions extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'EnumValueOptions', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'google.protobuf'), createEmptyInstance: create)
     ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deprecated')
+    ..aOM<FeatureSet>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'features', subBuilder: FeatureSet.create)
+    ..aOB(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'debugRedact')
     ..pc<UninterpretedOption>(999, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uninterpretedOption', $pb.PbFieldType.PM, subBuilder: UninterpretedOption.create)
     ..hasExtensions = true
   ;
@@ -1960,11 +2246,19 @@ class EnumValueOptions extends $pb.GeneratedMessage {
   EnumValueOptions._() : super();
   factory EnumValueOptions({
     $core.bool? deprecated,
+    FeatureSet? features,
+    $core.bool? debugRedact,
     $core.Iterable<UninterpretedOption>? uninterpretedOption,
   }) {
     final _result = create();
     if (deprecated != null) {
       _result.deprecated = deprecated;
+    }
+    if (features != null) {
+      _result.features = features;
+    }
+    if (debugRedact != null) {
+      _result.debugRedact = debugRedact;
     }
     if (uninterpretedOption != null) {
       _result.uninterpretedOption.addAll(uninterpretedOption);
@@ -2001,13 +2295,34 @@ class EnumValueOptions extends $pb.GeneratedMessage {
   @$pb.TagNumber(1)
   void clearDeprecated() => clearField(1);
 
+  @$pb.TagNumber(2)
+  FeatureSet get features => $_getN(1);
+  @$pb.TagNumber(2)
+  set features(FeatureSet v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasFeatures() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFeatures() => clearField(2);
+  @$pb.TagNumber(2)
+  FeatureSet ensureFeatures() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.bool get debugRedact => $_getBF(2);
+  @$pb.TagNumber(3)
+  set debugRedact($core.bool v) { $_setBool(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasDebugRedact() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDebugRedact() => clearField(3);
+
   @$pb.TagNumber(999)
-  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(1);
+  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(3);
 }
 
 class ServiceOptions extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ServiceOptions', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'google.protobuf'), createEmptyInstance: create)
     ..aOB(33, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deprecated')
+    ..aOM<FeatureSet>(34, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'features', subBuilder: FeatureSet.create)
     ..pc<UninterpretedOption>(999, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uninterpretedOption', $pb.PbFieldType.PM, subBuilder: UninterpretedOption.create)
     ..hasExtensions = true
   ;
@@ -2015,11 +2330,15 @@ class ServiceOptions extends $pb.GeneratedMessage {
   ServiceOptions._() : super();
   factory ServiceOptions({
     $core.bool? deprecated,
+    FeatureSet? features,
     $core.Iterable<UninterpretedOption>? uninterpretedOption,
   }) {
     final _result = create();
     if (deprecated != null) {
       _result.deprecated = deprecated;
+    }
+    if (features != null) {
+      _result.features = features;
     }
     if (uninterpretedOption != null) {
       _result.uninterpretedOption.addAll(uninterpretedOption);
@@ -2056,14 +2375,26 @@ class ServiceOptions extends $pb.GeneratedMessage {
   @$pb.TagNumber(33)
   void clearDeprecated() => clearField(33);
 
+  @$pb.TagNumber(34)
+  FeatureSet get features => $_getN(1);
+  @$pb.TagNumber(34)
+  set features(FeatureSet v) { setField(34, v); }
+  @$pb.TagNumber(34)
+  $core.bool hasFeatures() => $_has(1);
+  @$pb.TagNumber(34)
+  void clearFeatures() => clearField(34);
+  @$pb.TagNumber(34)
+  FeatureSet ensureFeatures() => $_ensure(1);
+
   @$pb.TagNumber(999)
-  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(1);
+  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(2);
 }
 
 class MethodOptions extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'MethodOptions', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'google.protobuf'), createEmptyInstance: create)
     ..aOB(33, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'deprecated')
     ..e<MethodOptions_IdempotencyLevel>(34, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'idempotencyLevel', $pb.PbFieldType.OE, defaultOrMaker: MethodOptions_IdempotencyLevel.IDEMPOTENCY_UNKNOWN, valueOf: MethodOptions_IdempotencyLevel.valueOf, enumValues: MethodOptions_IdempotencyLevel.values)
+    ..aOM<FeatureSet>(35, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'features', subBuilder: FeatureSet.create)
     ..pc<UninterpretedOption>(999, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'uninterpretedOption', $pb.PbFieldType.PM, subBuilder: UninterpretedOption.create)
     ..hasExtensions = true
   ;
@@ -2072,6 +2403,7 @@ class MethodOptions extends $pb.GeneratedMessage {
   factory MethodOptions({
     $core.bool? deprecated,
     MethodOptions_IdempotencyLevel? idempotencyLevel,
+    FeatureSet? features,
     $core.Iterable<UninterpretedOption>? uninterpretedOption,
   }) {
     final _result = create();
@@ -2080,6 +2412,9 @@ class MethodOptions extends $pb.GeneratedMessage {
     }
     if (idempotencyLevel != null) {
       _result.idempotencyLevel = idempotencyLevel;
+    }
+    if (features != null) {
+      _result.features = features;
     }
     if (uninterpretedOption != null) {
       _result.uninterpretedOption.addAll(uninterpretedOption);
@@ -2125,8 +2460,19 @@ class MethodOptions extends $pb.GeneratedMessage {
   @$pb.TagNumber(34)
   void clearIdempotencyLevel() => clearField(34);
 
+  @$pb.TagNumber(35)
+  FeatureSet get features => $_getN(2);
+  @$pb.TagNumber(35)
+  set features(FeatureSet v) { setField(35, v); }
+  @$pb.TagNumber(35)
+  $core.bool hasFeatures() => $_has(2);
+  @$pb.TagNumber(35)
+  void clearFeatures() => clearField(35);
+  @$pb.TagNumber(35)
+  FeatureSet ensureFeatures() => $_ensure(2);
+
   @$pb.TagNumber(999)
-  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(2);
+  $core.List<UninterpretedOption> get uninterpretedOption => $_getList(3);
 }
 
 class UninterpretedOption_NamePart extends $pb.GeneratedMessage {
@@ -2311,6 +2657,139 @@ class UninterpretedOption extends $pb.GeneratedMessage {
   $core.bool hasAggregateValue() => $_has(6);
   @$pb.TagNumber(8)
   void clearAggregateValue() => clearField(8);
+}
+
+class FeatureSet extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'FeatureSet', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'google.protobuf'), createEmptyInstance: create)
+    ..e<FeatureSet_FieldPresence>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fieldPresence', $pb.PbFieldType.OE, defaultOrMaker: FeatureSet_FieldPresence.FIELD_PRESENCE_UNKNOWN, valueOf: FeatureSet_FieldPresence.valueOf, enumValues: FeatureSet_FieldPresence.values)
+    ..e<FeatureSet_EnumType>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'enumType', $pb.PbFieldType.OE, defaultOrMaker: FeatureSet_EnumType.ENUM_TYPE_UNKNOWN, valueOf: FeatureSet_EnumType.valueOf, enumValues: FeatureSet_EnumType.values)
+    ..e<FeatureSet_RepeatedFieldEncoding>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'repeatedFieldEncoding', $pb.PbFieldType.OE, defaultOrMaker: FeatureSet_RepeatedFieldEncoding.REPEATED_FIELD_ENCODING_UNKNOWN, valueOf: FeatureSet_RepeatedFieldEncoding.valueOf, enumValues: FeatureSet_RepeatedFieldEncoding.values)
+    ..e<FeatureSet_StringFieldValidation>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'stringFieldValidation', $pb.PbFieldType.OE, defaultOrMaker: FeatureSet_StringFieldValidation.STRING_FIELD_VALIDATION_UNKNOWN, valueOf: FeatureSet_StringFieldValidation.valueOf, enumValues: FeatureSet_StringFieldValidation.values)
+    ..e<FeatureSet_MessageEncoding>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'messageEncoding', $pb.PbFieldType.OE, defaultOrMaker: FeatureSet_MessageEncoding.MESSAGE_ENCODING_UNKNOWN, valueOf: FeatureSet_MessageEncoding.valueOf, enumValues: FeatureSet_MessageEncoding.values)
+    ..e<FeatureSet_JsonFormat>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'jsonFormat', $pb.PbFieldType.OE, defaultOrMaker: FeatureSet_JsonFormat.JSON_FORMAT_UNKNOWN, valueOf: FeatureSet_JsonFormat.valueOf, enumValues: FeatureSet_JsonFormat.values)
+    ..aOM<FeatureSet>(999, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rawFeatures', subBuilder: FeatureSet.create)
+    ..hasExtensions = true
+  ;
+
+  FeatureSet._() : super();
+  factory FeatureSet({
+    FeatureSet_FieldPresence? fieldPresence,
+    FeatureSet_EnumType? enumType,
+    FeatureSet_RepeatedFieldEncoding? repeatedFieldEncoding,
+    FeatureSet_StringFieldValidation? stringFieldValidation,
+    FeatureSet_MessageEncoding? messageEncoding,
+    FeatureSet_JsonFormat? jsonFormat,
+    FeatureSet? rawFeatures,
+  }) {
+    final _result = create();
+    if (fieldPresence != null) {
+      _result.fieldPresence = fieldPresence;
+    }
+    if (enumType != null) {
+      _result.enumType = enumType;
+    }
+    if (repeatedFieldEncoding != null) {
+      _result.repeatedFieldEncoding = repeatedFieldEncoding;
+    }
+    if (stringFieldValidation != null) {
+      _result.stringFieldValidation = stringFieldValidation;
+    }
+    if (messageEncoding != null) {
+      _result.messageEncoding = messageEncoding;
+    }
+    if (jsonFormat != null) {
+      _result.jsonFormat = jsonFormat;
+    }
+    if (rawFeatures != null) {
+      _result.rawFeatures = rawFeatures;
+    }
+    return _result;
+  }
+  factory FeatureSet.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory FeatureSet.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  FeatureSet clone() => FeatureSet()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  FeatureSet copyWith(void Function(FeatureSet) updates) => super.copyWith((message) => updates(message as FeatureSet)) as FeatureSet; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static FeatureSet create() => FeatureSet._();
+  FeatureSet createEmptyInstance() => create();
+  static $pb.PbList<FeatureSet> createRepeated() => $pb.PbList<FeatureSet>();
+  @$core.pragma('dart2js:noInline')
+  static FeatureSet getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FeatureSet>(create);
+  static FeatureSet? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  FeatureSet_FieldPresence get fieldPresence => $_getN(0);
+  @$pb.TagNumber(1)
+  set fieldPresence(FeatureSet_FieldPresence v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasFieldPresence() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearFieldPresence() => clearField(1);
+
+  @$pb.TagNumber(2)
+  FeatureSet_EnumType get enumType => $_getN(1);
+  @$pb.TagNumber(2)
+  set enumType(FeatureSet_EnumType v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasEnumType() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEnumType() => clearField(2);
+
+  @$pb.TagNumber(3)
+  FeatureSet_RepeatedFieldEncoding get repeatedFieldEncoding => $_getN(2);
+  @$pb.TagNumber(3)
+  set repeatedFieldEncoding(FeatureSet_RepeatedFieldEncoding v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasRepeatedFieldEncoding() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearRepeatedFieldEncoding() => clearField(3);
+
+  @$pb.TagNumber(4)
+  FeatureSet_StringFieldValidation get stringFieldValidation => $_getN(3);
+  @$pb.TagNumber(4)
+  set stringFieldValidation(FeatureSet_StringFieldValidation v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasStringFieldValidation() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearStringFieldValidation() => clearField(4);
+
+  @$pb.TagNumber(5)
+  FeatureSet_MessageEncoding get messageEncoding => $_getN(4);
+  @$pb.TagNumber(5)
+  set messageEncoding(FeatureSet_MessageEncoding v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasMessageEncoding() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearMessageEncoding() => clearField(5);
+
+  @$pb.TagNumber(6)
+  FeatureSet_JsonFormat get jsonFormat => $_getN(5);
+  @$pb.TagNumber(6)
+  set jsonFormat(FeatureSet_JsonFormat v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasJsonFormat() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearJsonFormat() => clearField(6);
+
+  @$pb.TagNumber(999)
+  FeatureSet get rawFeatures => $_getN(6);
+  @$pb.TagNumber(999)
+  set rawFeatures(FeatureSet v) { setField(999, v); }
+  @$pb.TagNumber(999)
+  $core.bool hasRawFeatures() => $_has(6);
+  @$pb.TagNumber(999)
+  void clearRawFeatures() => clearField(999);
+  @$pb.TagNumber(999)
+  FeatureSet ensureRawFeatures() => $_ensure(6);
 }
 
 class SourceCodeInfo_Location extends $pb.GeneratedMessage {

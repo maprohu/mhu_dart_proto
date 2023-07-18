@@ -69,12 +69,16 @@ extension PmMessageX on PmMessage {
 abstract class PmMessageOfType<T extends GeneratedMessage> extends PmMessage {
   const PmMessageOfType();
 
+  @override
   T get emptyMessage$;
 
+  @override
   R type$<R>(R Function<TM extends GeneratedMessage>() fn) => fn<T>();
 
+  @override
   List<PmFieldOfMessage<T>> get fields$;
 
+  @override
   List<PmOneofOfMessage<T>> get oneofs$;
 }
 
@@ -107,6 +111,7 @@ abstract class HasFieldPath {
 abstract class PmField implements HasFieldPath, HasThisType {
   const PmField();
 
+  @override
   PmMessage get message;
 
   String get name;
@@ -131,14 +136,17 @@ extension PmFieldX on PmField {
 abstract class PmFieldOfType<T> extends PmField {
   const PmFieldOfType();
 
+  @override
   R type$<R>(R Function<TF>() fn) => fn<T>();
 
   T castType$(Object value) => value as T;
 }
 
 abstract class PmFieldOfMessage<T extends GeneratedMessage> implements PmField {
+  @override
   PmMessageOfType<T> get message;
 
+  @override
   R typeGeneratedMessage$<R>(R Function<TF extends GeneratedMessage>() fn) =>
       fn<T>();
 }
@@ -224,6 +232,7 @@ abstract class PmRepeatedField<T extends GeneratedMessage, V>
   @override
   int length(List<V> collection) => collection.length;
 
+  @override
   R singleType<R>(R Function<TF>() fn) => fn<V>();
 }
 
@@ -234,6 +243,7 @@ abstract class PmMapField<T extends GeneratedMessage, K, V>
   @override
   int length(Map<K, V> collection) => collection.length;
 
+  @override
   R singleType<R>(R Function<TF>() fn) => fn<V>();
 }
 

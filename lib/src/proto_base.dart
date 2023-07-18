@@ -8,7 +8,7 @@ extension PrototGeneratedMessageX<T extends GeneratedMessage> on T {
 
   V get<V>(FieldInfo<V> info) {
     if (info.isMapField) {
-      return this.$_getMap(info.index!) as V;
+      return $_getMap(info.index!) as V;
     } else {
       return getField(info.tagNumber) as V;
     }
@@ -34,6 +34,7 @@ abstract class ProtoField<P extends GeneratedMessage, F, I extends FieldInfo<F>>
 
   const ProtoField(this.info);
 
+  @override
   String get name => info.name;
 }
 

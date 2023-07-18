@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:mhu_dart_commons/commons.dart';
 
-import '../descriptor.pb.dart';
+import '../proto/descriptor.pb.dart';
 import '../proto_descriptor.dart';
 import 'descriptor_enum.dart';
 import 'descriptor_field.dart';
@@ -126,4 +126,12 @@ class PdMsg<M, F, E> extends PdMsgContainer<M, F, E> implements HasPayload<M> {
       (e) => e.nonMapEntryFieldsFlattened,
     ),
   );
+
+  @override
+  Iterable<EnumDescriptorProto> get importedEnumDescriptors =>
+      const Iterable.empty();
+
+  @override
+  Iterable<DescriptorProto> get importedMessageDescriptors =>
+      const Iterable.empty();
 }

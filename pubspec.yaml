@@ -1,6 +1,6 @@
 name: mhu_dart_proto
-version: 1.0.1-dev
-description: Protobuf stuff
+version: 1.0.0
+description: Runtime library used by the protobuf meta generator
 repository: https://github.com/maprohu/mhu_dart_proto
 
 environment:
@@ -8,16 +8,18 @@ environment:
 
 dependencies:
   collection: ^1.17.1
-  protobuf: any
-  freezed_annotation: any
-  rxdart: any
-  fast_immutable_collections: any
-  mhu_dart_commons:
-    path: ../mhu_dart_commons
+  protobuf:  ^3.0.0
+  freezed_annotation: ^2.4.1
+  rxdart: ^0.27.7
+  fast_immutable_collections: ^9.1.5
+  fixnum: ^1.1.0
+  mhu_dart_commons: ^1.0.7
+#  mhu_dart_commons:
+#    path: ../mhu_dart_commons
 
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.21.0
-  build_runner: any
-  freezed: any
+  build_runner: ^2.4.6
+  freezed: ^2.4.1
 

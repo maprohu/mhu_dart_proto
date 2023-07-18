@@ -1,6 +1,6 @@
 import 'package:mhu_dart_commons/commons.dart';
 
-import '../descriptor.pb.dart';
+import '../proto/descriptor.pb.dart';
 import 'descriptor_enum.dart';
 import 'descriptor_field.dart';
 import 'descriptor_message.dart';
@@ -10,8 +10,8 @@ class PdRoot<M, F, E> extends PdMsgContainer<M, F, E> {
   final M Function(PdMsg<M, F, E> msg) _msg;
   final F Function(PdFld<M, F, E> fld) _fld;
   final E Function(PdEnum<M, F, E> enm) _enm;
-  final FileDescriptorSet descriptorSet;
-
+  final FileDescriptorProto descriptorProto;
+  final Iterable<FileDescriptorProto> importedDescriptorProtos;
 
   // @override
   // int get globalIndex => 0;
@@ -33,20 +33,21 @@ class PdRoot<M, F, E> extends PdMsgContainer<M, F, E> {
 
   @override
   Iterable<DescriptorProto> get messageDescriptors =>
-      descriptorSet.file.expand((e) => e.messageType);
+      descriptorProto.messageType;
 
   @override
   PdMsg<M, F, E> resolve(Iterable<String> path) => doResolveNext(path);
 
+  @override
   final path = Iterable.empty();
 
   @override
-  Iterable<EnumDescriptorProto> get enumDescriptors =>
-      descriptorSet.file.expand((e) => e.enumType);
+  Iterable<EnumDescriptorProto> get enumDescriptors => descriptorProto.enumType;
 
   @override
   PdMsg<M, F, E> toMessage() => throw this;
 
+  @override
   PdMsg<M, F, E> doResolveMessageIndex(Iterable<int> path) =>
       doResolveMessageIndexNext(path);
 
@@ -66,11 +67,20 @@ class PdRoot<M, F, E> extends PdMsgContainer<M, F, E> {
       messages.expand((e) => e.nonMapEntryFieldsFlattened).toList();
 
   PdRoot({
-    required this.descriptorSet,
+    required this.descriptorProto,
+    this.importedDescriptorProtos = const Iterable.empty(),
     required M Function(PdMsg<M, F, E> msg) msg,
     required F Function(PdFld<M, F, E> fld) fld,
     required E Function(PdEnum<M, F, E> enm) enm,
   })  : _msg = msg,
         _fld = fld,
         _enm = enm;
+
+  @override
+  Iterable<EnumDescriptorProto> get importedEnumDescriptors =>
+      importedDescriptorProtos.expand((element) => element.enumType);
+
+  @override
+  Iterable<DescriptorProto> get importedMessageDescriptors =>
+      importedDescriptorProtos.expand((element) => element.messageType);
 }

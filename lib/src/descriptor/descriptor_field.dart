@@ -1,6 +1,6 @@
 import 'package:mhu_dart_commons/commons.dart';
 
-import '../descriptor.pb.dart';
+import '../proto/descriptor.pb.dart';
 import '../proto_descriptor.dart';
 import '../proto_descriptor_hierarchy.dart';
 import 'descriptor_message.dart';
@@ -18,6 +18,7 @@ class PdFld<M, F, E> implements HasPayload<F> {
   late final int globalIndex =
       msg.root.nonMapEntryFieldsFlattened.indexOf(this);
 
+  @override
   late final payload = msg.root.fldPayload(this);
 
   late final descriptor = msg.descriptor.field[index];

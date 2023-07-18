@@ -1,6 +1,6 @@
 import 'package:mhu_dart_commons/commons.dart';
 
-import '../descriptor.pb.dart';
+import '../proto/descriptor.pb.dart';
 import 'descriptor_message_container.dart';
 
 abstract class PdEnumResolver<M, F, E> {
@@ -16,10 +16,12 @@ class PdEnum<M, F, E> implements PdEnumResolver<M, F, E>, HasPayload<E> {
 
   late final root = parent.root;
 
+  @override
   late final payload = root.enumPayload(this);
 
   late final name = descriptor.name;
 
+  @override
   PdEnum<M, F, E> resolveEnum(Iterable<String> path) {
     assert(path.isEmpty);
     return this;

@@ -6,4 +6,4 @@ export 'src/descriptor/descriptor_message.dart';
 export 'src/descriptor/descriptor_field.dart';
 export 'src/descriptor/descriptor_root.dart';
 export 'src/descriptor/descriptor_oneof.dart';
-export 'src/descriptor.pb.dart';
+export 'src/proto/descriptor.pb.dart';

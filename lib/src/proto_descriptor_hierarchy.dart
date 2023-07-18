@@ -1,7 +1,7 @@
-import 'descriptor.pb.dart';
 import 'descriptor/descriptor_enum.dart';
 import 'descriptor/descriptor_field.dart';
 import 'descriptor/descriptor_message.dart';
+import 'proto/descriptor.pb.dart';
 
 class MapFields<M, F, E> {
   final PdFld<M, F, E> key;
