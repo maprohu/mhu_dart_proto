@@ -25,6 +25,7 @@ abstract class PdMsgContainer<M, F, E> implements PdEnumResolver<M, F, E> {
         ),
       )
       .toList();
+
   late final enums =
       enumDescriptors.mapIndexed((i, e) => PdEnum(this, e, i)).toList();
 
