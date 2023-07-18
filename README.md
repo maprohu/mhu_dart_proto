@@ -1,6 +1,10 @@
 # MHU Dart Proto
 
-Protobuf stuff...
+Runtime library used by the protobuf meta generator
+
+## Links
+
+* [pub.dev](https://pub.dev/packages/mhu_dart_proto)
 
 # Usage
 

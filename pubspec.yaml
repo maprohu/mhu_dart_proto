@@ -1,5 +1,5 @@
 name: mhu_dart_proto
-version: 1.0.0
+version: 1.0.1
 description: Runtime library used by the protobuf meta generator
 repository: https://github.com/maprohu/mhu_dart_proto
 
