@@ -96,4 +96,26 @@ class PbiMessageCalc {
       .distinct()
       .toIList();
 
+  late final concreteFieldKeysInDescriptorOrder = msg.tags
+      .map(
+        (tagNumber) => ConcreteFieldKey(
+          messageType: messageType,
+          tagNumber: tagNumber,
+        ),
+      )
+      .toIList();
+
+  late final concreteFieldCalcsInDescriptorOrder =
+      concreteFieldKeysInDescriptorOrder.map((f) => f.calc).toIList();
+
+  late final oneofFieldKeys = msg.oneofs
+      .mapIndexed(
+        (oneofIndex, element) => OneofFieldKey(
+          messageType: messageType,
+          oneofIndex: oneofIndex,
+        ),
+      )
+      .toIList();
+
+  late final oneofFieldCalcs = oneofFieldKeys.map((e) => e.calc).toIList();
 }
