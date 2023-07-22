@@ -1,7 +1,6 @@
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:mhu_dart_commons/commons.dart';
 import 'package:protobuf/protobuf.dart';
-
-
 
 typedef FieldsList<T extends GeneratedMessage> = List<PmFieldOfMessage<T>>;
 typedef OneOfs<T> = List<PmOneofOfMessage<T>>;
@@ -13,9 +12,15 @@ abstract class PmLib {
 
   List<PmEnum> get enums;
 
-  String get descriptor;
+  String get fileDescriptorProtoJson;
 
-  PmMessageOfType<T> messageOfType<T extends GeneratedMessage>();
+  List<PmLib> get importedLibs;
+
+// PmMessageOfType<T>? messageOfType<T extends GeneratedMessage>();
+}
+
+abstract interface class HasPmLib {
+  PmLib get pmLib$;
 }
 
 extension PmLibX on PmLib {
@@ -25,9 +30,18 @@ extension PmLibX on PmLib {
   Iterable<PmMessage> get allMessages => messages.expand((e) => e.allMessages);
 
   Iterable<PmField> get allFields => messages.expand((e) => e.allFields);
+
+  Iterable<PmLib> get allLibs =>
+      [this].followedBy(importedLibs.expand((e) => e.allLibs)).distinct();
+
+  Iterable<PmLib> get allImportedLibs =>
+      importedLibs.expand((e) => e.allLibs).distinct();
+
+  IMap<Type, PmMessage> createMessageLookupByType() =>
+      messages.uniqueIndexBy((msg) => msg.type$.get);
 }
 
-abstract class HasMessagePath {
+abstract class HasMessagePath extends HasPmLib {
   Iterable<int> get path$;
 }
 
@@ -100,7 +114,7 @@ abstract class PmNestedMessage<T extends GeneratedMessage>
   Iterable<int> get path$ => [...parent$.path$, index$];
 }
 
-abstract class HasFieldPath {
+abstract interface class HasFieldPath extends HasPmLib {
   HasMessagePath get message;
 
   int get index;
@@ -147,6 +161,9 @@ abstract class PmFieldOfMessage<T extends GeneratedMessage> implements PmField {
   PmMessageOfType<T> get message;
 
   @override
+  PmLib get pmLib$ => message.pmLib$;
+
+  @override
   R typeGeneratedMessage$<R>(R Function<TF extends GeneratedMessage>() fn) =>
       fn<T>();
 }
@@ -182,6 +199,9 @@ abstract class PmMsgField<T, V> extends PmFullField<T, V> {
 abstract class PmFieldOfMessageOfType<T extends GeneratedMessage, V>
     extends PmFieldOfType<V> implements PmFieldOfMessage<T> {
   const PmFieldOfMessageOfType();
+
+  @override
+  PmLib get pmLib$ => message.pmLib$;
 }
 
 abstract class PmReadFieldOfMessageOfType<T extends GeneratedMessage, V>
@@ -247,7 +267,7 @@ abstract class PmMapField<T extends GeneratedMessage, K, V>
   R singleType<R>(R Function<TF>() fn) => fn<V>();
 }
 
-abstract class PmEnum<E extends ProtobufEnum> {
+abstract class PmEnum<E extends ProtobufEnum> implements HasPmLib {
   const PmEnum();
 
   List<E> values();
