@@ -307,6 +307,16 @@ extension ScalarFieldAccessX<M extends GeneratedMessage, F>
 
   void Function(F value) setFwFor(Fw<M> message) =>
       (value) => setFw(message, value);
+
+  Fw<F> fieldFw(
+    Fw<M> message, {
+    required DspReg disposers,
+  }) {
+    return frw(
+      disposers.fr(() => get(message())),
+      setFwFor(message),
+    );
+  }
 }
 
 sealed class NumericIntFieldAccess<M extends GeneratedMessage>
@@ -428,6 +438,11 @@ class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
   }
 
   F ensure(M message) => message.$_ensure(index);
+}
+
+extension MessageFieldAccessX<M extends GeneratedMessage,
+    F extends GeneratedMessage> on MessageFieldAccess<M, F> {
+  PbiMessage<F> get valuePbiMessage => defaultSingleValue.pbi;
 }
 
 class EnumFieldAccess<M extends GeneratedMessage, E extends ProtobufEnum>
@@ -554,6 +569,8 @@ class MapFieldAccess<M extends GeneratedMessage, K, V>
   @override
   final MapFieldInfo fieldInfo;
 
+  Type get keyType => K;
+
   MapFieldAccess(
     this.fieldInfo, {
     super.unsafe,
@@ -575,6 +592,12 @@ class MapFieldAccess<M extends GeneratedMessage, K, V>
 
 extension MapFieldAccessX<M extends GeneratedMessage, K, V>
     on MapFieldAccess<M, K, V> {
+  PbMapKey get defaultMapKey => switch (keyType) {
+        int => PbMapKey.defaultInt,
+        String => PbMapKey.defaultString,
+        final other => throw other,
+      };
+
   Fu<Map<K, V>> fu(
     Fw<M> message, {
     DspReg? disposers,
