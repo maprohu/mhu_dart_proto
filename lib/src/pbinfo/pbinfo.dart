@@ -280,14 +280,6 @@ sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
     message.clearField(tagNumber);
   }
 
-  void setFw(Fw<M> fv, F value) {
-    fv.rebuild(
-      (message) {
-        set(message, value);
-      },
-    );
-  }
-
   @override
   F get defaultSingleValue => fieldInfo.makeDefault!();
 }
@@ -304,6 +296,17 @@ extension ScalarFieldAccessX<M extends GeneratedMessage, F>
         this.fr(message, disposers: disposers),
         (v) => setFw(message, v),
       );
+
+  void setFw(Fw<M> fv, F value) {
+    fv.rebuild(
+      (message) {
+        set(message, value);
+      },
+    );
+  }
+
+  void Function(F value) setFwFor(Fw<M> message) =>
+      (value) => setFw(message, value);
 }
 
 sealed class NumericIntFieldAccess<M extends GeneratedMessage>
@@ -362,9 +365,6 @@ class Sint32FieldAccess<M extends GeneratedMessage>
   }
 }
 
-
-
-
 class Int64FieldAccess<M extends GeneratedMessage>
     extends ScalarFieldAccess<M, Int64> {
   Int64FieldAccess(
@@ -384,10 +384,11 @@ class Int64FieldAccess<M extends GeneratedMessage>
 sealed class NumericDoubleFieldAccess<M extends GeneratedMessage>
     extends ScalarFieldAccess<M, double> {
   NumericDoubleFieldAccess(
-      super.fieldInfo, {
-        super.unsafe,
-      });
+    super.fieldInfo, {
+    super.unsafe,
+  });
 }
+
 class DoubleFieldAccess<M extends GeneratedMessage>
     extends NumericDoubleFieldAccess<M> {
   DoubleFieldAccess(
