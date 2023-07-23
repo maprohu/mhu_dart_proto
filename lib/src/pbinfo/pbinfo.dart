@@ -443,6 +443,11 @@ class EnumFieldAccess<M extends GeneratedMessage, E extends ProtobufEnum>
   }
 }
 
+extension EnumFieldAccessX<M extends GeneratedMessage, E extends ProtobufEnum>
+    on EnumFieldAccess<M, E> {
+  List<E> get enumValues => fieldInfo.enumValues! as List<E>;
+}
+
 class BoolFieldAccess<M extends GeneratedMessage>
     extends ScalarFieldAccess<M, bool> {
   BoolFieldAccess(
