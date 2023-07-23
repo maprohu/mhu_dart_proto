@@ -16,10 +16,6 @@ class PbiOneof<M extends GeneratedMessage, E extends Enum> {
   ) =>
       fn(this);
 }
-// typedef PbiOneof<E extends Enum> = ({
-//   String name,
-//   List<E> which,
-// });
 
 class PbiMessage<M extends GeneratedMessage> {
   final M instance;
