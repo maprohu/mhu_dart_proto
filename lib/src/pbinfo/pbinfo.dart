@@ -8,21 +8,24 @@ import 'package:protobuf/protobuf.dart';
 part 'pbgen.dart';
 
 extension FieldInfoX on FieldInfo<dynamic> {
+  int get singleValueType => type & _optionalTypes;
+
   FieldAccess<M, dynamic, dynamic> accessForMessage<M extends GeneratedMessage>(
-    PbiMessage<M> msg,
-  ) {
+    PbiMessage<M> msg, {
+    int? type,
+  }) {
     return msg
-        .withGeneric(
-          // ignore: unnecessary_cast
-          <T extends GeneratedMessage>(_) => access<T>() as FieldAccess,
+        .withGeneric<FieldAccess>(
+          <T extends GeneratedMessage>(_) => access<T>(type: type),
         )
         .cast();
   }
 
   FieldAccess<M, dynamic, dynamic> access<M extends GeneratedMessage>({
     bool unsafe = false,
+    int? type,
   }) {
-    return accessForType<M>(type, unsafe: unsafe);
+    return accessForType<M>(type ?? this.type, unsafe: unsafe);
   }
 
   FieldAccess<M, dynamic, dynamic> accessForType<M extends GeneratedMessage>(
@@ -62,11 +65,9 @@ extension FieldInfoX on FieldInfo<dynamic> {
         return BytesFieldAccess(cast(), unsafe: unsafe);
       case PbFieldType.OM:
         final valueDefault = subBuilder!();
-        final result = valueDefault.pbi.withGeneric(
+        final result = valueDefault.pbi.withGeneric<MessageFieldAccess>(
           <R extends GeneratedMessage>(_) =>
-              // ignore: unnecessary_cast
-              MessageFieldAccess<M, R>(cast(), unsafe: unsafe)
-                  as MessageFieldAccess,
+              MessageFieldAccess<M, R>(cast(), unsafe: unsafe),
         );
         return result.cast();
       case PbFieldType.OE:
@@ -125,10 +126,8 @@ extension FieldInfoX on FieldInfo<dynamic> {
 
       case PbFieldType.PM:
         final valueDefault = subBuilder!();
-        final result = valueDefault.pbi.withGeneric(
-          <R extends GeneratedMessage>(_) =>
-              // ignore: unnecessary_cast
-              repeated<R>() as RepeatedFieldAccess,
+        final result = valueDefault.pbi.withGeneric<RepeatedFieldAccess>(
+          <R extends GeneratedMessage>(_) => repeated<R>(),
         );
         return result.cast();
 
@@ -139,13 +138,10 @@ extension FieldInfoX on FieldInfo<dynamic> {
         final valueAccess =
             mapInfo.mapEntryBuilderInfo.byIndex[1].access(unsafe: true);
 
-        final result = keyAccess.withValueType(
-          // ignore: unnecessary_cast
-          <K>() => valueAccess.withValueType(
-            // ignore: unnecessary_cast
-            <V>() => MapFieldAccess<M, K, V>(cast(), unsafe: unsafe)
-                as MapFieldAccess,
-          ) as MapFieldAccess,
+        final result = keyAccess.withValueType<MapFieldAccess>(
+          <K>() => valueAccess.withValueType<MapFieldAccess>(
+            <V>() => MapFieldAccess<M, K, V>(cast(), unsafe: unsafe),
+          ),
         );
 
         return result.cast();
@@ -230,6 +226,14 @@ sealed class FieldAccess<M extends GeneratedMessage, F, S>
 
   R withSingleValueType<R>(R Function<T>() fn) => fn<S>();
 
+  R withGenerics<R>(
+    R Function<TM extends GeneratedMessage, TF, TS>(
+      FieldAccess<TM, TF, TS> access,
+    ) fn,
+  ) {
+    return fn(this);
+  }
+
   S get defaultSingleValue;
 
   @override
@@ -280,6 +284,14 @@ sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
     message.clearField(tagNumber);
   }
 
+  R withScalarGenerics<R>(
+    R Function<TM extends GeneratedMessage, TF>(
+      ScalarFieldAccess<TM, TF> access,
+    ) fn,
+  ) {
+    return fn(this);
+  }
+
   @override
   F get defaultSingleValue => fieldInfo.makeDefault!();
 }
@@ -317,6 +329,7 @@ extension ScalarFieldAccessX<M extends GeneratedMessage, F>
       setFwFor(message),
     );
   }
+
 }
 
 sealed class NumericIntFieldAccess<M extends GeneratedMessage>
@@ -438,6 +451,10 @@ class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
   }
 
   F ensure(M message) => message.$_ensure(index);
+
+  @override
+  F get defaultSingleValue => fieldInfo.subBuilder!() as F;
+
 }
 
 extension MessageFieldAccessX<M extends GeneratedMessage,
@@ -508,6 +525,25 @@ class BytesFieldAccess<M extends GeneratedMessage>
   }
 }
 
+const _optionalTypes = PbFieldType.OB |
+    PbFieldType.OY |
+    PbFieldType.OS |
+    PbFieldType.OF |
+    PbFieldType.OD |
+    PbFieldType.OE |
+    PbFieldType.OG |
+    PbFieldType.O3 |
+    PbFieldType.O6 |
+    PbFieldType.OS3 |
+    PbFieldType.OS6 |
+    PbFieldType.OU3 |
+    PbFieldType.OU6 |
+    PbFieldType.OF3 |
+    PbFieldType.OF6 |
+    PbFieldType.OSF3 |
+    PbFieldType.OSF6 |
+    PbFieldType.OM;
+
 class RepeatedFieldAccess<M extends GeneratedMessage, F>
     extends FieldAccess<M, List<F>, F> {
   @override
@@ -521,25 +557,6 @@ class RepeatedFieldAccess<M extends GeneratedMessage, F>
   @override
   List<F> get(M message) => message.$_getList(index);
 
-  static const _optionalTypes = PbFieldType.OB |
-      PbFieldType.OY |
-      PbFieldType.OS |
-      PbFieldType.OF |
-      PbFieldType.OD |
-      PbFieldType.OE |
-      PbFieldType.OG |
-      PbFieldType.O3 |
-      PbFieldType.O6 |
-      PbFieldType.OS3 |
-      PbFieldType.OS6 |
-      PbFieldType.OU3 |
-      PbFieldType.OU6 |
-      PbFieldType.OF3 |
-      PbFieldType.OF6 |
-      PbFieldType.OSF3 |
-      PbFieldType.OSF6 |
-      PbFieldType.OM;
-
   @override
   F get defaultSingleValue {
     final maker = FieldInfo.findMakeDefault(
@@ -547,6 +564,14 @@ class RepeatedFieldAccess<M extends GeneratedMessage, F>
       fieldInfo.subBuilder ?? fieldInfo.defaultEnumValue,
     );
     return maker!();
+  }
+
+  R withListGenerics<R>(
+      R Function<TM extends GeneratedMessage, TF>(
+          RepeatedFieldAccess<TM, TF> access,
+          ) fn,
+      ) {
+    return fn(this);
   }
 }
 
@@ -588,6 +613,14 @@ class MapFieldAccess<M extends GeneratedMessage, K, V>
 
   @override
   Map<K, V> get(M message) => message.$_getMap(index);
+
+  R withMapGenerics<R>(
+    R Function<TM extends GeneratedMessage, TK, TV>(
+      MapFieldAccess<TM, TK, TV> access,
+    ) fn,
+  ) {
+    return fn(this);
+  }
 }
 
 extension MapFieldAccessX<M extends GeneratedMessage, K, V>

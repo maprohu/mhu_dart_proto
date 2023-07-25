@@ -36,4 +36,18 @@ class PbiConcreteFieldCalc {
   late final access = fieldInfo.accessForMessage(message);
 
   late final defaultSingleValue = access.defaultSingleValue;
+
+  late final singleValueFieldAccess = access.let((access) {
+    return switch (access) {
+      ScalarFieldAccess() => access,
+      MapFieldAccess(:final fieldInfo) =>
+        fieldInfo.mapEntryBuilderInfo.byIndex[1].access(
+          unsafe: true,
+        ),
+      RepeatedFieldAccess(:final fieldInfo) => fieldInfo.access(
+          unsafe: true,
+          type: fieldInfo.singleValueType,
+        ),
+    };
+  });
 }
