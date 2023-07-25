@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:mhu_dart_commons/commons.dart';
 import 'package:mhu_dart_proto/mhu_dart_proto.dart';

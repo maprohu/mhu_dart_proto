@@ -16,10 +16,6 @@ class PbiOneof<M extends GeneratedMessage, E extends Enum> {
   ) =>
       fn(this);
 }
-// typedef PbiOneof<E extends Enum> = ({
-//   String name,
-//   List<E> which,
-// });
 
 class PbiMessage<M extends GeneratedMessage> {
   final M instance;
@@ -96,4 +92,26 @@ class PbiMessageCalc {
       .distinct()
       .toIList();
 
+  late final concreteFieldKeysInDescriptorOrder = msg.tags
+      .map(
+        (tagNumber) => ConcreteFieldKey(
+          messageType: messageType,
+          tagNumber: tagNumber,
+        ),
+      )
+      .toIList();
+
+  late final concreteFieldCalcsInDescriptorOrder =
+      concreteFieldKeysInDescriptorOrder.map((f) => f.calc).toIList();
+
+  late final oneofFieldKeys = msg.oneofs
+      .mapIndexed(
+        (oneofIndex, element) => OneofFieldKey(
+          messageType: messageType,
+          oneofIndex: oneofIndex,
+        ),
+      )
+      .toIList();
+
+  late final oneofFieldCalcs = oneofFieldKeys.map((e) => e.calc).toIList();
 }

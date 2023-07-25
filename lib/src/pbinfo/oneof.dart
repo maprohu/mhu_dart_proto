@@ -17,6 +17,8 @@ class PbiOneofCalc {
 
   late final oneof = message.oneofs[oneofIndex];
 
+  late final name = oneof.name;
+
   late final fieldsInDescriptorOrder = message.tags
       .where(
         (tagNumber) => message.builderInfo.oneofs[tagNumber] == oneofIndex,

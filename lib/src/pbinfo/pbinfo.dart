@@ -8,58 +8,66 @@ import 'package:protobuf/protobuf.dart';
 part 'pbgen.dart';
 
 extension FieldInfoX on FieldInfo<dynamic> {
+  int get singleValueType => type & _optionalTypes;
+
   FieldAccess<M, dynamic, dynamic> accessForMessage<M extends GeneratedMessage>(
-    PbiMessage<M> msg,
-  ) {
+    PbiMessage<M> msg, {
+    int? type,
+  }) {
     return msg
-        .withGeneric(
-          // ignore: unnecessary_cast
-          <T extends GeneratedMessage>(_) => access<T>() as FieldAccess,
+        .withGeneric<FieldAccess>(
+          <T extends GeneratedMessage>(_) => access<T>(type: type),
         )
         .cast();
   }
 
-  FieldAccess<M, dynamic, dynamic> access<M extends GeneratedMessage>() {
-    return accessForType<M>(type);
+  FieldAccess<M, dynamic, dynamic> access<M extends GeneratedMessage>({
+    bool unsafe = false,
+    int? type,
+  }) {
+    return accessForType<M>(type ?? this.type, unsafe: unsafe);
   }
 
   FieldAccess<M, dynamic, dynamic> accessForType<M extends GeneratedMessage>(
-    int type,
-  ) {
-    assert (M != GeneratedMessage);
-    RepeatedFieldAccess<M, F> repeated<F>() => RepeatedFieldAccess(cast());
+    int type, {
+    bool unsafe = false,
+  }) {
+    if (!unsafe) {
+      assert(M != GeneratedMessage);
+    }
+    RepeatedFieldAccess<M, F> repeated<F>() =>
+        RepeatedFieldAccess(cast(), unsafe: unsafe);
 
     switch (type) {
       case PbFieldType.OD:
-        return DoubleFieldAccess(cast());
+        return DoubleFieldAccess(cast(), unsafe: unsafe);
       case PbFieldType.OF:
-        return FloatFieldAccess(cast());
+        return FloatFieldAccess(cast(), unsafe: unsafe);
       case PbFieldType.O3:
-        return Int32FieldAccess(cast());
+        return Int32FieldAccess(cast(), unsafe: unsafe);
       case PbFieldType.OU3:
       case PbFieldType.OF3:
-        return Uint32FieldAccess(cast());
+        return Uint32FieldAccess(cast(), unsafe: unsafe);
       case PbFieldType.OS3:
       case PbFieldType.OSF3:
-        return Sint32FieldAccess(cast());
+        return Sint32FieldAccess(cast(), unsafe: unsafe);
       case PbFieldType.O6:
       case PbFieldType.OU6:
       case PbFieldType.OS6:
       case PbFieldType.OF6:
       case PbFieldType.OSF6:
-        return Int64FieldAccess(cast());
+        return Int64FieldAccess(cast(), unsafe: unsafe);
       case PbFieldType.OB:
-        return BoolFieldAccess(cast());
+        return BoolFieldAccess(cast(), unsafe: unsafe);
       case PbFieldType.OS:
-        return StringFieldAccess(cast());
+        return StringFieldAccess(cast(), unsafe: unsafe);
       case PbFieldType.OY:
-        return BytesFieldAccess(cast());
+        return BytesFieldAccess(cast(), unsafe: unsafe);
       case PbFieldType.OM:
         final valueDefault = subBuilder!();
-        final result = valueDefault.pbi.withGeneric(
+        final result = valueDefault.pbi.withGeneric<MessageFieldAccess>(
           <R extends GeneratedMessage>(_) =>
-              // ignore: unnecessary_cast
-              MessageFieldAccess<M, R>(cast()) as MessageFieldAccess,
+              MessageFieldAccess<M, R>(cast(), unsafe: unsafe),
         );
         return result.cast();
       case PbFieldType.OE:
@@ -67,7 +75,7 @@ extension FieldInfoX on FieldInfo<dynamic> {
         final result = valueDefault.pbi.withEnumType(
           <R extends ProtobufEnum>() =>
               // ignore: unnecessary_cast
-              EnumFieldAccess<M, R>(cast()) as EnumFieldAccess,
+              EnumFieldAccess<M, R>(cast(), unsafe: unsafe) as EnumFieldAccess,
         );
         return result.cast();
 
@@ -118,24 +126,22 @@ extension FieldInfoX on FieldInfo<dynamic> {
 
       case PbFieldType.PM:
         final valueDefault = subBuilder!();
-        final result = valueDefault.pbi.withGeneric(
-          <R extends GeneratedMessage>(_) =>
-              // ignore: unnecessary_cast
-              repeated<R>() as RepeatedFieldAccess,
+        final result = valueDefault.pbi.withGeneric<RepeatedFieldAccess>(
+          <R extends GeneratedMessage>(_) => repeated<R>(),
         );
         return result.cast();
 
       case PbFieldType.M:
         final mapInfo = this as MapFieldInfo;
-        final keyAccess = mapInfo.mapEntryBuilderInfo.byIndex[0].access();
-        final valueAccess = mapInfo.mapEntryBuilderInfo.byIndex[1].access();
+        final keyAccess =
+            mapInfo.mapEntryBuilderInfo.byIndex[0].access(unsafe: true);
+        final valueAccess =
+            mapInfo.mapEntryBuilderInfo.byIndex[1].access(unsafe: true);
 
-        final result = keyAccess.withValueType(
-          // ignore: unnecessary_cast
-          <K>() => valueAccess.withValueType(
-            // ignore: unnecessary_cast
-            <V>() => MapFieldAccess<M, K, V>(cast()) as MapFieldAccess,
-          ) as MapFieldAccess,
+        final result = keyAccess.withValueType<MapFieldAccess>(
+          <K>() => valueAccess.withValueType<MapFieldAccess>(
+            <V>() => MapFieldAccess<M, K, V>(cast(), unsafe: unsafe),
+          ),
         );
 
         return result.cast();
@@ -147,11 +153,11 @@ extension FieldInfoX on FieldInfo<dynamic> {
 sealed class FieldKey {
   final Type messageType;
 
-   FieldKey({
+  FieldKey({
     required this.messageType,
   }) {
-     assert(messageType != GeneratedMessage);
-   }
+    assert(messageType != GeneratedMessage);
+  }
 }
 
 class ConcreteFieldKey extends FieldKey {
@@ -200,8 +206,12 @@ abstract interface class FieldMarker<M extends GeneratedMessage> {
 
 sealed class FieldAccess<M extends GeneratedMessage, F, S>
     implements FieldMarker<M> {
-  FieldAccess() {
-    assert(M != GeneratedMessage);
+  FieldAccess({
+    bool unsafe = false,
+  }) {
+    if (!unsafe) {
+      assert(M != GeneratedMessage);
+    }
   }
 
   FieldInfo/*<S>*/ get fieldInfo;
@@ -215,6 +225,14 @@ sealed class FieldAccess<M extends GeneratedMessage, F, S>
   R withValueType<R>(R Function<T>() fn) => fn<F>();
 
   R withSingleValueType<R>(R Function<T>() fn) => fn<S>();
+
+  R withGenerics<R>(
+    R Function<TM extends GeneratedMessage, TF, TS>(
+      FieldAccess<TM, TF, TS> access,
+    ) fn,
+  ) {
+    return fn(this);
+  }
 
   S get defaultSingleValue;
 
@@ -250,7 +268,10 @@ sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
   @override
   final FieldInfo fieldInfo;
 
-  ScalarFieldAccess(this.fieldInfo);
+  ScalarFieldAccess(
+    this.fieldInfo, {
+    super.unsafe,
+  });
 
   @override
   F get(M message) => message.$_getN(index);
@@ -263,12 +284,12 @@ sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
     message.clearField(tagNumber);
   }
 
-  void setFw(Fw<M> fv, F value) {
-    fv.rebuild(
-      (message) {
-        set(message, value);
-      },
-    );
+  R withScalarGenerics<R>(
+    R Function<TM extends GeneratedMessage, TF>(
+      ScalarFieldAccess<TM, TF> access,
+    ) fn,
+  ) {
+    return fn(this);
   }
 
   @override
@@ -287,11 +308,44 @@ extension ScalarFieldAccessX<M extends GeneratedMessage, F>
         this.fr(message, disposers: disposers),
         (v) => setFw(message, v),
       );
+
+  void setFw(Fw<M> fv, F value) {
+    fv.rebuild(
+      (message) {
+        set(message, value);
+      },
+    );
+  }
+
+  void Function(F value) setFwFor(Fw<M> message) =>
+      (value) => setFw(message, value);
+
+  Fw<F> fieldFw(
+    Fw<M> message, {
+    required DspReg disposers,
+  }) {
+    return frw(
+      disposers.fr(() => get(message())),
+      setFwFor(message),
+    );
+  }
+
+}
+
+sealed class NumericIntFieldAccess<M extends GeneratedMessage>
+    extends ScalarFieldAccess<M, int> {
+  NumericIntFieldAccess(
+    super.fieldInfo, {
+    super.unsafe,
+  });
 }
 
 class Int32FieldAccess<M extends GeneratedMessage>
-    extends ScalarFieldAccess<M, int> {
-  Int32FieldAccess(super.fieldRef);
+    extends NumericIntFieldAccess<M> {
+  Int32FieldAccess(
+    super.fieldRef, {
+    super.unsafe,
+  });
 
   @override
   int get(M message) => message.$_getIZ(index);
@@ -303,8 +357,11 @@ class Int32FieldAccess<M extends GeneratedMessage>
 }
 
 class Uint32FieldAccess<M extends GeneratedMessage>
-    extends ScalarFieldAccess<M, int> {
-  Uint32FieldAccess(super.fieldRef);
+    extends NumericIntFieldAccess<M> {
+  Uint32FieldAccess(
+    super.fieldRef, {
+    super.unsafe,
+  });
 
   @override
   int get(M message) => message.$_getIZ(index);
@@ -316,8 +373,11 @@ class Uint32FieldAccess<M extends GeneratedMessage>
 }
 
 class Sint32FieldAccess<M extends GeneratedMessage>
-    extends ScalarFieldAccess<M, int> {
-  Sint32FieldAccess(super.fieldRef);
+    extends NumericIntFieldAccess<M> {
+  Sint32FieldAccess(
+    super.fieldRef, {
+    super.unsafe,
+  });
 
   @override
   int get(M message) => message.$_getIZ(index);
@@ -330,7 +390,10 @@ class Sint32FieldAccess<M extends GeneratedMessage>
 
 class Int64FieldAccess<M extends GeneratedMessage>
     extends ScalarFieldAccess<M, Int64> {
-  Int64FieldAccess(super.fieldRef);
+  Int64FieldAccess(
+    super.fieldRef, {
+    super.unsafe,
+  });
 
   @override
   Int64 get(M message) => message.$_getI64(index);
@@ -341,9 +404,20 @@ class Int64FieldAccess<M extends GeneratedMessage>
   }
 }
 
-class DoubleFieldAccess<M extends GeneratedMessage>
+sealed class NumericDoubleFieldAccess<M extends GeneratedMessage>
     extends ScalarFieldAccess<M, double> {
-  DoubleFieldAccess(super.fieldRef);
+  NumericDoubleFieldAccess(
+    super.fieldInfo, {
+    super.unsafe,
+  });
+}
+
+class DoubleFieldAccess<M extends GeneratedMessage>
+    extends NumericDoubleFieldAccess<M> {
+  DoubleFieldAccess(
+    super.fieldRef, {
+    super.unsafe,
+  });
 
   @override
   void set(M message, double value) {
@@ -352,8 +426,11 @@ class DoubleFieldAccess<M extends GeneratedMessage>
 }
 
 class FloatFieldAccess<M extends GeneratedMessage>
-    extends ScalarFieldAccess<M, double> {
-  FloatFieldAccess(super.fieldRef);
+    extends NumericDoubleFieldAccess<M> {
+  FloatFieldAccess(
+    super.fieldRef, {
+    super.unsafe,
+  });
 
   @override
   void set(M message, double value) {
@@ -363,7 +440,10 @@ class FloatFieldAccess<M extends GeneratedMessage>
 
 class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
     extends ScalarFieldAccess<M, F> {
-  MessageFieldAccess(super.fieldRef);
+  MessageFieldAccess(
+    super.fieldRef, {
+    super.unsafe,
+  });
 
   @override
   void set(M message, F value) {
@@ -371,11 +451,23 @@ class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
   }
 
   F ensure(M message) => message.$_ensure(index);
+
+  @override
+  F get defaultSingleValue => fieldInfo.subBuilder!() as F;
+
+}
+
+extension MessageFieldAccessX<M extends GeneratedMessage,
+    F extends GeneratedMessage> on MessageFieldAccess<M, F> {
+  PbiMessage<F> get valuePbiMessage => defaultSingleValue.pbi;
 }
 
 class EnumFieldAccess<M extends GeneratedMessage, E extends ProtobufEnum>
     extends ScalarFieldAccess<M, E> {
-  EnumFieldAccess(super.fieldInfo);
+  EnumFieldAccess(
+    super.fieldInfo, {
+    super.unsafe,
+  });
 
   @override
   void set(M message, E value) {
@@ -383,9 +475,17 @@ class EnumFieldAccess<M extends GeneratedMessage, E extends ProtobufEnum>
   }
 }
 
+extension EnumFieldAccessX<M extends GeneratedMessage, E extends ProtobufEnum>
+    on EnumFieldAccess<M, E> {
+  List<E> get enumValues => fieldInfo.enumValues! as List<E>;
+}
+
 class BoolFieldAccess<M extends GeneratedMessage>
     extends ScalarFieldAccess<M, bool> {
-  BoolFieldAccess(super.fieldRef);
+  BoolFieldAccess(
+    super.fieldRef, {
+    super.unsafe,
+  });
 
   @override
   bool get(M message) => message.$_getBF(index);
@@ -398,7 +498,10 @@ class BoolFieldAccess<M extends GeneratedMessage>
 
 class StringFieldAccess<M extends GeneratedMessage>
     extends ScalarFieldAccess<M, String> {
-  StringFieldAccess(super.fieldRef);
+  StringFieldAccess(
+    super.fieldRef, {
+    super.unsafe,
+  });
 
   @override
   String get(M message) => message.$_getSZ(index);
@@ -411,7 +514,10 @@ class StringFieldAccess<M extends GeneratedMessage>
 
 class BytesFieldAccess<M extends GeneratedMessage>
     extends ScalarFieldAccess<M, List<int>> {
-  BytesFieldAccess(super.fieldRef);
+  BytesFieldAccess(
+    super.fieldRef, {
+    super.unsafe,
+  });
 
   @override
   void set(M message, List<int> value) {
@@ -419,34 +525,37 @@ class BytesFieldAccess<M extends GeneratedMessage>
   }
 }
 
+const _optionalTypes = PbFieldType.OB |
+    PbFieldType.OY |
+    PbFieldType.OS |
+    PbFieldType.OF |
+    PbFieldType.OD |
+    PbFieldType.OE |
+    PbFieldType.OG |
+    PbFieldType.O3 |
+    PbFieldType.O6 |
+    PbFieldType.OS3 |
+    PbFieldType.OS6 |
+    PbFieldType.OU3 |
+    PbFieldType.OU6 |
+    PbFieldType.OF3 |
+    PbFieldType.OF6 |
+    PbFieldType.OSF3 |
+    PbFieldType.OSF6 |
+    PbFieldType.OM;
+
 class RepeatedFieldAccess<M extends GeneratedMessage, F>
     extends FieldAccess<M, List<F>, F> {
   @override
   final FieldInfo fieldInfo;
 
-  RepeatedFieldAccess(this.fieldInfo);
+  RepeatedFieldAccess(
+    this.fieldInfo, {
+    super.unsafe,
+  });
 
   @override
   List<F> get(M message) => message.$_getList(index);
-
-  static const _optionalTypes = PbFieldType.OB |
-      PbFieldType.OY |
-      PbFieldType.OS |
-      PbFieldType.OF |
-      PbFieldType.OD |
-      PbFieldType.OE |
-      PbFieldType.OG |
-      PbFieldType.O3 |
-      PbFieldType.O6 |
-      PbFieldType.OS3 |
-      PbFieldType.OS6 |
-      PbFieldType.OU3 |
-      PbFieldType.OU6 |
-      PbFieldType.OF3 |
-      PbFieldType.OF6 |
-      PbFieldType.OSF3 |
-      PbFieldType.OSF6 |
-      PbFieldType.OM;
 
   @override
   F get defaultSingleValue {
@@ -455,6 +564,14 @@ class RepeatedFieldAccess<M extends GeneratedMessage, F>
       fieldInfo.subBuilder ?? fieldInfo.defaultEnumValue,
     );
     return maker!();
+  }
+
+  R withListGenerics<R>(
+      R Function<TM extends GeneratedMessage, TF>(
+          RepeatedFieldAccess<TM, TF> access,
+          ) fn,
+      ) {
+    return fn(this);
   }
 }
 
@@ -477,17 +594,43 @@ class MapFieldAccess<M extends GeneratedMessage, K, V>
   @override
   final MapFieldInfo fieldInfo;
 
-  MapFieldAccess(this.fieldInfo);
+  Type get keyType => K;
+
+  MapFieldAccess(
+    this.fieldInfo, {
+    super.unsafe,
+  });
 
   @override
-  V get defaultSingleValue => fieldInfo.valueFieldInfo.makeDefault!();
+  V get defaultSingleValue {
+    final valueField = fieldInfo.valueFieldInfo;
+    final fn = valueField.makeDefault ??
+        valueField.subBuilder ??
+        valueField.enumValues?.let((ev) => () => ev.first) ??
+        (throw fieldInfo.name);
+    return fn();
+  }
 
   @override
   Map<K, V> get(M message) => message.$_getMap(index);
+
+  R withMapGenerics<R>(
+    R Function<TM extends GeneratedMessage, TK, TV>(
+      MapFieldAccess<TM, TK, TV> access,
+    ) fn,
+  ) {
+    return fn(this);
+  }
 }
 
 extension MapFieldAccessX<M extends GeneratedMessage, K, V>
     on MapFieldAccess<M, K, V> {
+  PbMapKey get defaultMapKey => switch (keyType) {
+        int => PbMapKey.defaultInt,
+        String => PbMapKey.defaultString,
+        final other => throw other,
+      };
+
   Fu<Map<K, V>> fu(
     Fw<M> message, {
     DspReg? disposers,
