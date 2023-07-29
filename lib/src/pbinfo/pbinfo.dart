@@ -320,7 +320,7 @@ extension ScalarFieldAccessX<M extends GeneratedMessage, F>
   void Function(F value) setFwFor(Fw<M> message) =>
       (value) => setFw(message, value);
 
-  Fw<F> fieldFw(
+  Fw<F> fieldFwHot(
     Fw<M> message, {
     required DspReg disposers,
   }) {
@@ -330,6 +330,14 @@ extension ScalarFieldAccessX<M extends GeneratedMessage, F>
     );
   }
 
+  Fw<F> fieldFw(
+    Fw<M> message,
+  ) {
+    return frw(
+      message.map(get),
+      setFwFor(message),
+    );
+  }
 }
 
 sealed class NumericIntFieldAccess<M extends GeneratedMessage>
@@ -454,7 +462,6 @@ class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
 
   @override
   F get defaultSingleValue => fieldInfo.subBuilder!() as F;
-
 }
 
 extension MessageFieldAccessX<M extends GeneratedMessage,
@@ -567,10 +574,10 @@ class RepeatedFieldAccess<M extends GeneratedMessage, F>
   }
 
   R withListGenerics<R>(
-      R Function<TM extends GeneratedMessage, TF>(
-          RepeatedFieldAccess<TM, TF> access,
-          ) fn,
-      ) {
+    R Function<TM extends GeneratedMessage, TF>(
+      RepeatedFieldAccess<TM, TF> access,
+    ) fn,
+  ) {
     return fn(this);
   }
 }
