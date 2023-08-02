@@ -160,6 +160,13 @@ sealed class FieldKey {
   }
 }
 
+extension FieldKeyX on FieldKey {
+  String get protoName => switch (this) {
+    ConcreteFieldKey(:final calc) => calc.protoName,
+    OneofFieldKey(:final calc) => calc.name,
+  };
+}
+
 class ConcreteFieldKey extends FieldKey {
   final int tagNumber;
 

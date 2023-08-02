@@ -30,6 +30,7 @@ class PbiConcreteFieldCalc {
   late final fieldInfo = message.builderInfo.fieldInfo[fieldKey.tagNumber]!;
 
   String get name => fieldInfo.name;
+  String get protoName => fieldInfo.protoName;
 
   int get tagNumber => fieldInfo.tagNumber;
 
