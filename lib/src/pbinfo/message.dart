@@ -73,6 +73,8 @@ class PbiMessageCalc {
 
   Type get messageType => msg.messageType;
 
+  late final messageName = builderInfo.messageName;
+
   late final topFieldKeys = msg.tags
       .map((tagNumber) {
         final oneofIndex = builderInfo.oneofs[tagNumber];
