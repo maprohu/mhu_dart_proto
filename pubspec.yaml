@@ -11,7 +11,7 @@ environment:
 #    path: ../mhu_dart_commons
 
 dependencies:
-  mhu_dart_commons: ^1.0.8
+  mhu_dart_commons: ^1.0.9
 
   collection: ^1.17.1
   protobuf:  ^3.0.0
