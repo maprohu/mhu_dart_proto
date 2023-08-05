@@ -187,6 +187,10 @@ class ConcreteFieldKey extends FieldKey {
   int get hashCode => messageType.hashCode ^ tagNumber.hashCode;
 }
 
+abstract class HasConcreteFieldKey {
+  ConcreteFieldKey get concreteFieldKey;
+}
+
 class OneofFieldKey extends FieldKey {
   final int oneofIndex;
 
@@ -635,6 +639,10 @@ class MapFieldAccess<M extends GeneratedMessage, K, V>
   ) {
     return fn(this);
   }
+}
+
+abstract class HasMapFieldAccess<M extends GeneratedMessage, K, V> {
+  MapFieldAccess<M, K, V> get mapFieldAccess;
 }
 
 extension MapFieldAccessX<M extends GeneratedMessage, K, V>
