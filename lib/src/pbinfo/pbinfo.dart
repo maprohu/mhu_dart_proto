@@ -595,11 +595,11 @@ class RepeatedFieldAccess<M extends GeneratedMessage, F>
 
 extension RepeatedFieldAccessX<M extends GeneratedMessage, F>
     on RepeatedFieldAccess<M, F> {
-  Fu<List<F>> fu(
+  Fu<List<F>> fuHot(
     Fw<M> message, {
     DspReg? disposers,
   }) {
-    return commons.fru(
+    return commons.fuHot(
       message,
       get,
       disposers: disposers,
@@ -653,14 +653,21 @@ extension MapFieldAccessX<M extends GeneratedMessage, K, V>
         final other => throw other,
       };
 
-  Fu<Map<K, V>> fu(
-    Fw<M> message, {
-    DspReg? disposers,
-  }) {
-    return commons.fru(
+  Fu<Map<K, V>> fuHot(
+      Fw<M> message, {
+        DspReg? disposers,
+      }) {
+    return commons.fuHot(
       message,
       get,
       disposers: disposers,
+    );
+  }
+  Fu<Map<K, V>> fuCold(
+    Fw<M> message, ) {
+    return commons.fuCold(
+      message,
+      get,
     );
   }
 }

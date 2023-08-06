@@ -87,7 +87,7 @@ extension PbiPbFwX<M extends GeneratedMessage> on PbFw<M> {
       FR Function(Fw<F> item, {DspReg? disposers}) wrap,
       ) {
     return CachedFu.list(
-      fv: access.fu(
+      fv: access.fuHot(
         fv$,
         disposers: _disposers,
       ),
@@ -104,7 +104,7 @@ extension PbiPbFwX<M extends GeneratedMessage> on PbFw<M> {
       FR Function(Fw<F> item, {DspReg? disposers}) wrap,
       ) {
     return CachedFu.map(
-      fv: access.fu(
+      fv: access.fuHot(
         fv$,
         disposers: _disposers,
       ),

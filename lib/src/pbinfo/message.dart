@@ -94,6 +94,14 @@ class PbiMessageCalc {
       .distinct()
       .toIList();
 
+  late final concreteFieldKeysByTagNumber = IMap.fromKeys(
+    keys: builderInfo.fieldInfo.keys,
+    valueMapper: (tagNumber) => ConcreteFieldKey(
+      messageType: messageType,
+      tagNumber: tagNumber,
+    ),
+  );
+
   late final concreteFieldKeysInDescriptorOrder = msg.tags
       .map(
         (tagNumber) => ConcreteFieldKey(
