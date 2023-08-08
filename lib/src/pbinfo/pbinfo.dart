@@ -310,6 +310,13 @@ sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
 extension ScalarFieldAccessX<M extends GeneratedMessage, F>
     on ScalarFieldAccess<M, F> {
   F? getOpt(M message) => has(message) ? get(message) : null;
+  void setOpt(M message, F? value) {
+    if (value == null) {
+      clear(message);
+    } else {
+      set(message, value);
+    }
+  }
 
   Fw<F> fw(
     Fw<M> message, {
