@@ -1,11 +1,15 @@
 import 'package:collection/collection.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:mhu_dart_annotation/mhu_dart_annotation.dart';
 import 'package:mhu_dart_commons/commons.dart';
 import 'package:mhu_dart_commons/commons.dart' as commons;
 import 'package:mhu_dart_proto/mhu_dart_proto.dart';
 import 'package:protobuf/protobuf.dart';
 
 part 'pbgen.dart';
+
+part 'pbinfo.g.has.dart';
+// part 'pbinfo.g.compose.dart';
 
 extension FieldInfoX on FieldInfo<dynamic> {
   int get singleValueType => type & _optionalTypes;
@@ -150,6 +154,7 @@ extension FieldInfoX on FieldInfo<dynamic> {
   }
 }
 
+@Has()
 sealed class FieldKey {
   final Type messageType;
 
@@ -162,11 +167,12 @@ sealed class FieldKey {
 
 extension FieldKeyX on FieldKey {
   String get protoName => switch (this) {
-    ConcreteFieldKey(:final calc) => calc.protoName,
-    OneofFieldKey(:final calc) => calc.name,
-  };
+        ConcreteFieldKey(:final calc) => calc.protoName,
+        OneofFieldKey(:final calc) => calc.name,
+      };
 }
 
+@Has()
 class ConcreteFieldKey extends FieldKey {
   final int tagNumber;
 
@@ -185,10 +191,6 @@ class ConcreteFieldKey extends FieldKey {
 
   @override
   int get hashCode => messageType.hashCode ^ tagNumber.hashCode;
-}
-
-abstract class HasConcreteFieldKey {
-  ConcreteFieldKey get concreteFieldKey;
 }
 
 class OneofFieldKey extends FieldKey {
@@ -211,9 +213,12 @@ class OneofFieldKey extends FieldKey {
   int get hashCode => messageType.hashCode ^ oneofIndex.hashCode;
 }
 
-abstract interface class FieldMarker<M extends GeneratedMessage> {
-  FieldKey get fieldKey;
+abstract class HasFieldInfo<T> {
+  FieldInfo<T> get fieldInfo;
 }
+
+abstract interface class FieldMarker<M extends GeneratedMessage>
+    implements HasFieldKey {}
 
 sealed class FieldAccess<M extends GeneratedMessage, F, S>
     implements FieldMarker<M> {
@@ -310,6 +315,7 @@ sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
 extension ScalarFieldAccessX<M extends GeneratedMessage, F>
     on ScalarFieldAccess<M, F> {
   F? getOpt(M message) => has(message) ? get(message) : null;
+
   void setOpt(M message, F? value) {
     if (value == null) {
       clear(message);
@@ -652,6 +658,11 @@ abstract class HasMapFieldAccess<M extends GeneratedMessage, K, V> {
   MapFieldAccess<M, K, V> get mapFieldAccess;
 }
 
+extension HasMapFieldAccessX<M extends GeneratedMessage, K, V>
+    on HasMapFieldAccess<M, K, V> {
+  V get defaultSingleValue => mapFieldAccess.fieldKey.calc.defaultSingleValue;
+}
+
 extension MapFieldAccessX<M extends GeneratedMessage, K, V>
     on MapFieldAccess<M, K, V> {
   PbMapKey get defaultMapKey => switch (keyType) {
@@ -661,17 +672,19 @@ extension MapFieldAccessX<M extends GeneratedMessage, K, V>
       };
 
   Fu<Map<K, V>> fuHot(
-      Fw<M> message, {
-        DspReg? disposers,
-      }) {
+    Fw<M> message, {
+    DspReg? disposers,
+  }) {
     return commons.fuHot(
       message,
       get,
       disposers: disposers,
     );
   }
+
   Fu<Map<K, V>> fuCold(
-    Fw<M> message, ) {
+    Fw<M> message,
+  ) {
     return commons.fuCold(
       message,
       get,

@@ -15,7 +15,10 @@ extension RegistryConcreateFieldKeyX on ConcreteFieldKey {
 }
 
 extension ConcreteFieldKeyX on ConcreteFieldKey {
+  @Deprecated('use concreteFieldCalc instead')
+  /// use [concreteFieldCalc] instead
   PbiConcreteFieldCalc get calc => _registry._fieldCalc.get(this);
+  ConcreteFieldCalc get concreteFieldCalc => _registry._concreteFieldCalc.get(this);
 }
 
 class PbiConcreteFieldCalc {
@@ -29,7 +32,10 @@ class PbiConcreteFieldCalc {
 
   late final fieldInfo = message.builderInfo.fieldInfo[fieldKey.tagNumber]!;
 
+  late final dataType = DataType.of(fieldInfo: fieldInfo);
+
   String get name => fieldInfo.name;
+
   String get protoName => fieldInfo.protoName;
 
   int get tagNumber => fieldInfo.tagNumber;

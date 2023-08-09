@@ -2,11 +2,17 @@ import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:mhu_dart_commons/commons.dart';
 import 'package:mhu_dart_proto/mhu_dart_proto.dart';
+import 'package:mhu_dart_proto/src/pbinfo/data_type.dart';
 import 'package:protobuf/protobuf.dart';
 
+import 'field_calc.dart';
+
 part 'message.dart';
+
 part 'field.dart';
+
 part 'enum.dart';
+
 part 'oneof.dart';
 
 class _PbiRegistry {
@@ -33,6 +39,13 @@ class _PbiRegistry {
   final _msgCalc = Cache(PbiMessageCalc.new);
   final _fieldCalc = Cache(PbiConcreteFieldCalc.new);
   final _oneofCalc = Cache(PbiOneofCalc.new);
+
+  final _topFieldCalc = Cache(FieldCalc.of);
+  final _concreteFieldCalc = Cache(ConcreteFieldCalc.of);
+}
+
+extension TopFieldKeyX on FieldKey {
+  FieldCalc get fieldCalc => _registry._topFieldCalc.get(this);
 }
 
 final _registry = _PbiRegistry.instance;
@@ -61,4 +74,3 @@ class PbiLib {
   Iterable<PbiLib> get allImportedLibraries =>
       importedLibraries.expand((element) => element.allLibs).distinct();
 }
-
