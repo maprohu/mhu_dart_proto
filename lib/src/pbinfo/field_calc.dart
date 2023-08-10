@@ -13,7 +13,6 @@ typedef FieldDataType<T> = DataType<T>;
 @Has()
 typedef MessageType<M extends GeneratedMessage> = Type;
 
-
 mixin FieldCalcMixin implements HasFieldKey {
   late final messageType = fieldKey.messageType;
   late final pbiMessage = lookupPbiMessage(messageType);
@@ -25,17 +24,19 @@ abstract base class FieldCalc with FieldCalcMixin implements HasFieldKey {
       ComposedFieldCalc(fieldKey: fieldKey);
 }
 
-mixin ConcreteFieldCalcMixin on FieldCalcMixin implements HasConcreteFieldKey {
-  late final tagNumber = concreteFieldKey.tagNumber;
+mixin ConcreteFieldCalcMixin on FieldCalcMixin
+    implements HasConcreteFieldKey, FieldCoordinates {
+  @override
+  late final tagNumberValue = concreteFieldKey.tagNumber;
 
-  late final fieldInfo = pbiMessage.builderInfo.fieldInfo[tagNumber]!;
+  late final fieldInfo = pbiMessage.builderInfo.fieldInfo[tagNumberValue]!;
 
   late final DataType dataType = DataType.of(fieldInfo: fieldInfo);
 
   late final protoName = fieldInfo.protoName;
 
+  @override
   late final fieldIndex = fieldInfo.index!;
-
 }
 
 @Compose()

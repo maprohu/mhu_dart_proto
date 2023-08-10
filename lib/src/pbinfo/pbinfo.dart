@@ -173,6 +173,11 @@ extension FieldKeyX on FieldKey {
 }
 
 @Has()
+typedef TagNumberValue = int;
+@Has()
+typedef FieldIndex = int;
+
+@Has()
 class ConcreteFieldKey extends FieldKey {
   final int tagNumber;
 

@@ -1,11 +1,14 @@
 import 'package:fixnum/fixnum.dart';
 import 'package:mhu_dart_annotation/mhu_dart_annotation.dart';
+import 'package:mhu_dart_commons/commons.dart';
 import 'package:mhu_dart_proto/mhu_dart_proto.dart';
 import 'package:protobuf/protobuf.dart';
 
 part 'data_type.g.has.dart';
 
 part 'data_type.g.compose.dart';
+
+part 'data_type_protoc.dart';
 
 typedef GenericFunction1<T> = R Function<R>(R Function<TT extends T>() fn);
 
@@ -16,48 +19,6 @@ typedef DataTypeGeneric<T> = GenericFunction1<T>;
 
 @Has()
 typedef DefaultValue<T> = T;
-
-@Has()
-typedef ReadFieldValue<F> = F Function(
-  GeneratedMessage message,
-  int fieldIndex,
-);
-
-ReadFieldValue<F> _getN<F>() {
-  return (message, fieldIndex) => message.$_getN(fieldIndex);
-}
-
-ReadFieldValue<int> _getIZ() {
-  return (message, fieldIndex) => message.$_getIZ(fieldIndex);
-}
-
-ReadFieldValue<Int64> _getI64() {
-  return (message, fieldIndex) => message.$_getI64(fieldIndex);
-}
-
-ReadFieldValue<bool> _getBF() {
-  return (message, fieldIndex) => message.$_getBF(fieldIndex);
-}
-
-ReadFieldValue<String> _getSZ() {
-  return (message, fieldIndex) => message.$_getSZ(fieldIndex);
-}
-
-ReadFieldValue<List<F>> _getList<F>() {
-  return (message, fieldIndex) => message.$_getList(fieldIndex);
-}
-
-ReadFieldValue<Map<K, V>> _getMap<K, V>() {
-  return (message, fieldIndex) => message.$_getMap(fieldIndex);
-}
-
-extension HasReadFieldValueX<F> on HasReadFieldValue<F> {
-  F Function(M message) readFieldValueFor<M extends GeneratedMessage>(
-    int fieldIndex,
-  ) {
-    return (message) => readFieldValue(message, fieldIndex);
-  }
-}
 
 @Compose()
 abstract class DataTypeBits<T>
@@ -161,33 +122,92 @@ sealed class DataType<T> implements DataTypeBits<T> {
   }
 }
 
-sealed class ScalarDataType<T> implements DataType<T> {}
+@Compose()
+abstract class ScalarDataTypeBits<T> implements HasWriteFieldValue<T> {}
+
+@Has()
+sealed class ScalarDataType<T> implements ScalarDataTypeBits<T>, DataType<T> {}
+
+extension HasScalarDataTypeX<T> on HasScalarDataType<T> {
+  R scalarDataTypeGeneric<R>(
+          R Function<TT>(ScalarDataType<TT> scalarDataType) fn) =>
+      scalarDataType.scalarDataTypeGeneric(fn);
+}
+
+extension ScalarDataTypeX<T> on ScalarDataType<T> {
+  R scalarDataTypeGeneric<R>(
+          R Function<TT>(ScalarDataType<TT> scalarDataType) fn) =>
+      dataTypeGeneric(
+        <TT>() => fn(this as ScalarDataType<TT>),
+      );
+
+  Fw<T?> fwForField({
+    required FieldCoordinates fieldCoordinates,
+    required Mfw mfw,
+  }) {
+    return scalarDataTypeGeneric<Fw>(<TT>(scalarDataType) {
+      final read =
+          scalarDataType.readFieldValueFor(fieldCoordinates.fieldIndex);
+      final write = scalarDataType.writeFieldValueFor(fieldCoordinates);
+      final exists =
+          scalarDataType.existsFieldValueFor(fieldCoordinates.tagNumberValue);
+      final clear =
+          scalarDataType.clearFieldValueFor(fieldCoordinates.tagNumberValue);
+      return Fw<TT?>.fromFr(
+        fr: mfw.map(
+          (message) {
+            if (exists(message)) {
+              return read(message);
+            } else {
+              return null;
+            }
+          },
+        ),
+        set: (value) {
+          mfw.rebuild((message) {
+            if (value == null) {
+              clear(message);
+            } else {
+              write(message, value);
+            }
+          });
+        },
+      );
+    }) as Fw<T?>;
+  }
+}
 
 @Compose()
-abstract class BytesDataType extends ScalarDataType<List<int>>
-    implements DataTypeBits<List<int>> {
+abstract class BytesDataType
+    implements ScalarDataType<List<int>>, DataTypeBits<List<int>> {
   static final instance = ComposedBytesDataType.dataTypeBits(
     dataTypeBits: DataTypeBits.of(
       readFieldValue: _getN(),
       defaultValue: const [],
     ),
+    writeFieldValue: _setBytes(),
   );
 }
 
 @Compose()
 abstract class MessageDataType<M extends GeneratedMessage>
-    implements DataTypeBits<M>, ScalarDataType<M> {
+    implements DataTypeBits<M>, ScalarDataTypeBits<M>, ScalarDataType<M> {
   static MessageDataType of({
     required FieldInfo fieldInfo,
   }) {
     final GeneratedMessage defaultValue = fieldInfo.makeDefault!();
-    return defaultValue.pbi.withGeneric(
+    return fromPbiMessage(defaultValue.pbi);
+  }
+
+  static MessageDataType fromPbiMessage(PbiMessage pbiMessage) {
+    return pbiMessage.withGeneric(
       <R extends GeneratedMessage>(_) {
         return ComposedMessageDataType<R>.dataTypeBits(
           dataTypeBits: DataTypeBits.of(
             readFieldValue: _getN(),
-            defaultValue: defaultValue as R,
+            defaultValue: pbiMessage.instance as R,
           ),
+          writeFieldValue: _setField(),
         );
       },
     );
@@ -198,6 +218,7 @@ abstract class MessageDataType<M extends GeneratedMessage>
 abstract class Int64DataType
     implements
         DataTypeBits<Int64>,
+        ScalarDataTypeBits<Int64>,
         ScalarDataType<Int64>,
         MapKeyDataType<Int64> {
   static final instance = ComposedInt64DataType.dataTypeBits(
@@ -205,13 +226,14 @@ abstract class Int64DataType
       readFieldValue: _getI64(),
       defaultValue: Int64.ZERO,
     ),
+    writeFieldValue: _setInt64(),
     mapKeyComparator: (a, b) => a.compareTo(b),
   );
 }
 
 @Compose()
 abstract class EnumDataType<E extends ProtobufEnum>
-    implements DataTypeBits<E>, ScalarDataType<E> {
+    implements DataTypeBits<E>, ScalarDataTypeBits<E>, ScalarDataType<E> {
   static EnumDataType of({
     required FieldInfo fieldInfo,
   }) {
@@ -223,6 +245,7 @@ abstract class EnumDataType<E extends ProtobufEnum>
             readFieldValue: _getN(),
             defaultValue: defaultValue as R,
           ),
+          writeFieldValue: _setField(),
         );
       },
     );
@@ -231,12 +254,17 @@ abstract class EnumDataType<E extends ProtobufEnum>
 
 @Compose()
 abstract class BoolDataType
-    implements DataTypeBits<bool>, ScalarDataType<bool>, MapKeyDataType<bool> {
+    implements
+        DataTypeBits<bool>,
+        ScalarDataTypeBits<bool>,
+        ScalarDataType<bool>,
+        MapKeyDataType<bool> {
   static final instance = ComposedBoolDataType.dataTypeBits(
     dataTypeBits: DataTypeBits.of(
       readFieldValue: _getBF(),
       defaultValue: false,
     ),
+    writeFieldValue: _setBool(),
     mapKeyComparator: (a, b) => (a == b ? 0 : (a ? 1 : -1)),
   );
 }
@@ -245,6 +273,7 @@ abstract class BoolDataType
 abstract class StringDataType
     implements
         DataTypeBits<String>,
+        ScalarDataTypeBits<String>,
         ScalarDataType<String>,
         MapKeyDataType<String> {
   static final instance = ComposedStringDataType.dataTypeBits(
@@ -252,6 +281,7 @@ abstract class StringDataType
       readFieldValue: _getSZ(),
       defaultValue: "",
     ),
+    writeFieldValue: _setString(),
     mapKeyComparator: (a, b) => a.compareTo(b),
   );
 }
@@ -275,6 +305,7 @@ sealed class CoreIntDataType
 abstract class Int32DataType implements CoreIntDataType, CoreIntDataTypeBits {
   static final instance = ComposedInt32DataType.coreIntDataTypeBits(
     coreIntDataTypeBits: CoreIntDataTypeBits.instance,
+    writeFieldValue: _setSignedInt32(),
   );
 }
 
@@ -282,6 +313,7 @@ abstract class Int32DataType implements CoreIntDataType, CoreIntDataTypeBits {
 abstract class Uint32DataType implements CoreIntDataType, CoreIntDataTypeBits {
   static final instance = ComposedUint32DataType.coreIntDataTypeBits(
     coreIntDataTypeBits: CoreIntDataTypeBits.instance,
+    writeFieldValue: _setUnsignedInt32(),
   );
 }
 
@@ -289,6 +321,7 @@ abstract class Uint32DataType implements CoreIntDataType, CoreIntDataTypeBits {
 abstract class Sint32DataType implements CoreIntDataType, CoreIntDataTypeBits {
   static final instance = ComposedSint32DataType.coreIntDataTypeBits(
     coreIntDataTypeBits: CoreIntDataTypeBits.instance,
+    writeFieldValue: _setSignedInt32(),
   );
 }
 
@@ -309,6 +342,7 @@ abstract class FloatDataType
     implements CoreDoubleDataType, CoreDoubleDataTypeBits {
   static final instance = ComposedFloatDataType.coreDoubleDataTypeBits(
     coreDoubleDataTypeBits: CoreDoubleDataTypeBits.instance,
+    writeFieldValue: _setFloat(),
   );
 }
 
@@ -317,6 +351,7 @@ abstract class DoubleDataType
     implements CoreDoubleDataType, CoreDoubleDataTypeBits {
   static final instance = ComposedDoubleDataType.coreDoubleDataTypeBits(
     coreDoubleDataTypeBits: CoreDoubleDataTypeBits.instance,
+    writeFieldValue: _setDouble(),
   );
 }
 
