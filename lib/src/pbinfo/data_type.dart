@@ -128,7 +128,7 @@ abstract class ScalarDataTypeBits<T> implements HasWriteFieldValue<T> {}
 @Has()
 sealed class ScalarDataType<T> implements ScalarDataTypeBits<T>, DataType<T> {}
 
-extension HasScalarDataTypeX<T> on HasScalarDataType<T> {
+extension HasScalarDataTypeX<T extends Object> on HasScalarDataType<T> {
   R scalarDataTypeGeneric<R>(
           R Function<TT>(ScalarDataType<TT> scalarDataType) fn) =>
       scalarDataType.scalarDataTypeGeneric(fn);
@@ -145,35 +145,34 @@ extension ScalarDataTypeX<T> on ScalarDataType<T> {
     required FieldCoordinates fieldCoordinates,
     required Mfw mfw,
   }) {
-    return scalarDataTypeGeneric<Fw>(<TT>(scalarDataType) {
-      final read =
-          scalarDataType.readFieldValueFor(fieldCoordinates.fieldIndex);
-      final write = scalarDataType.writeFieldValueFor(fieldCoordinates);
-      final exists =
-          scalarDataType.existsFieldValueFor(fieldCoordinates.tagNumberValue);
-      final clear =
-          scalarDataType.clearFieldValueFor(fieldCoordinates.tagNumberValue);
-      return Fw<TT?>.fromFr(
-        fr: mfw.map(
-          (message) {
-            if (exists(message)) {
-              return read(message);
-            } else {
-              return null;
-            }
-          },
-        ),
-        set: (value) {
-          mfw.rebuild((message) {
-            if (value == null) {
-              clear(message);
-            } else {
-              write(message, value);
-            }
-          });
+    final scalarDataType = this;
+
+    final read = scalarDataType.readFieldValueFor(fieldCoordinates.fieldIndex);
+    final write = scalarDataType.writeFieldValueFor(fieldCoordinates);
+    final exists =
+        scalarDataType.existsFieldValueFor(fieldCoordinates.tagNumberValue);
+    final clear =
+        scalarDataType.clearFieldValueFor(fieldCoordinates.tagNumberValue);
+    return Fw<T?>.fromFr(
+      fr: mfw.map(
+        (message) {
+          if (exists(message)) {
+            return read(message);
+          } else {
+            return null;
+          }
         },
-      );
-    }) as Fw<T?>;
+      ),
+      set: (value) {
+        mfw.rebuild((message) {
+          if (value == null) {
+            clear(message);
+          } else {
+            write(message, value);
+          }
+        });
+      },
+    );
   }
 }
 
