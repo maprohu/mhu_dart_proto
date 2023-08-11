@@ -141,9 +141,10 @@ extension ScalarDataTypeX<T> on ScalarDataType<T> {
         <TT>() => fn(this as ScalarDataType<TT>),
       );
 
-  Fw<T?> fwForField({
+  Fw<T?> fwForField<M extends GeneratedMessage>({
     required FieldCoordinates fieldCoordinates,
-    required Mfw mfw,
+    required Fw<M?> mfw,
+    required M defaultMessage,
   }) {
     final scalarDataType = this;
 
@@ -156,6 +157,9 @@ extension ScalarDataTypeX<T> on ScalarDataType<T> {
     return Fw<T?>.fromFr(
       fr: mfw.map(
         (message) {
+          if (message == null) {
+            return null;
+          }
           if (exists(message)) {
             return read(message);
           } else {
@@ -164,13 +168,17 @@ extension ScalarDataTypeX<T> on ScalarDataType<T> {
         },
       ),
       set: (value) {
-        mfw.rebuild((message) {
-          if (value == null) {
-            clear(message);
-          } else {
-            write(message, value);
-          }
-        });
+        final currentValue = mfw.read() ?? defaultMessage;
+
+        mfw.value = currentValue.rebuild(
+          (message) {
+            if (value == null) {
+              clear(message);
+            } else {
+              write(message, value);
+            }
+          },
+        );
       },
     );
   }
@@ -189,6 +197,7 @@ abstract class BytesDataType
 }
 
 @Compose()
+@Has()
 abstract class MessageDataType<M extends GeneratedMessage>
     implements
         DataTypeBits<M>,
@@ -216,6 +225,20 @@ abstract class MessageDataType<M extends GeneratedMessage>
           pbiMessageCalc: pbiMessage.calc,
         );
       },
+    );
+  }
+}
+
+extension MessageDataTypeX<M extends GeneratedMessage> on MessageDataType<M> {
+  R messageDataTypeGeneric<R>(
+    R Function<TT extends GeneratedMessage>(
+      MessageDataType<TT> messageDataType,
+    ) fn,
+  ) {
+    return pbiMessage.withGeneric(
+      <TT extends GeneratedMessage>(pbiMessage) => fn(
+        this as MessageDataType<TT>,
+      ),
     );
   }
 }
