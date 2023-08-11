@@ -190,7 +190,12 @@ abstract class BytesDataType
 
 @Compose()
 abstract class MessageDataType<M extends GeneratedMessage>
-    implements DataTypeBits<M>, ScalarDataTypeBits<M>, ScalarDataType<M> {
+    implements
+        DataTypeBits<M>,
+        ScalarDataTypeBits<M>,
+        ScalarDataType<M>,
+        HasPbiMessage<M>,
+        HasPbiMessageCalc {
   static MessageDataType of({
     required FieldInfo fieldInfo,
   }) {
@@ -200,13 +205,15 @@ abstract class MessageDataType<M extends GeneratedMessage>
 
   static MessageDataType fromPbiMessage(PbiMessage pbiMessage) {
     return pbiMessage.withGeneric(
-      <R extends GeneratedMessage>(_) {
+      <R extends GeneratedMessage>(pbiMessage) {
         return ComposedMessageDataType<R>.dataTypeBits(
           dataTypeBits: DataTypeBits.of(
             readFieldValue: _getN(),
-            defaultValue: pbiMessage.instance as R,
+            defaultValue: pbiMessage.instance,
           ),
           writeFieldValue: _setField(),
+          pbiMessage: pbiMessage,
+          pbiMessageCalc: pbiMessage.calc,
         );
       },
     );

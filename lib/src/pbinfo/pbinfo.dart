@@ -285,7 +285,7 @@ extension FieldAccessX<M extends GeneratedMessage, F, S>
 }
 
 sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
-    extends FieldAccess<M, F, F> {
+    extends FieldAccess<M, F, F> implements ReadWriteAttribute<M, F> {
   @override
   final FieldInfo fieldInfo;
 
@@ -315,6 +315,12 @@ sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
 
   @override
   F get defaultSingleValue => fieldInfo.makeDefault!();
+
+  @override
+  ReadAttribute<M, F> get readAttribute => get;
+
+  @override
+  WriteAttribute<M, F> get writeAttribute => set;
 }
 
 extension ScalarFieldAccessX<M extends GeneratedMessage, F>
@@ -476,7 +482,7 @@ class FloatFieldAccess<M extends GeneratedMessage>
 }
 
 class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
-    extends ScalarFieldAccess<M, F> {
+    extends ScalarFieldAccess<M, F> implements ReadEnsureAttribute<M, F> {
   MessageFieldAccess(
     super.fieldRef, {
     super.unsafe,
@@ -491,6 +497,9 @@ class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
 
   @override
   F get defaultSingleValue => fieldInfo.subBuilder!() as F;
+
+  @override
+  EnsureAttribute<M, F> get ensureAttribute => ensure;
 }
 
 extension MessageFieldAccessX<M extends GeneratedMessage,

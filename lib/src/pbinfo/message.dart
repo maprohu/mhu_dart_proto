@@ -17,6 +17,7 @@ class PbiOneof<M extends GeneratedMessage, E extends Enum> {
       fn(this);
 }
 
+@Has()
 class PbiMessage<M extends GeneratedMessage> {
   final M instance;
   final List<PbiOneof<M, Enum>> oneofs;
@@ -64,6 +65,7 @@ extension PbiMessageX on PbiMessage {
   PbiMessageCalc get calc => _registry._msgCalc(this);
 }
 
+@Has()
 class PbiMessageCalc {
   final PbiMessage msg;
 
