@@ -34,6 +34,7 @@ abstract class DataTypeBits<T>
       );
 }
 
+@Has()
 sealed class DataType<T> implements DataTypeBits<T> {
   static ScalarDataType? _scalar({
     required FieldInfo fieldInfo,
@@ -212,8 +213,8 @@ abstract class MessageDataType<M extends GeneratedMessage>
     return fromPbiMessage(defaultValue.pbi);
   }
 
-  static MessageDataType fromPbiMessage(PbiMessage pbiMessage) {
-    return pbiMessage.withGeneric(
+  static MessageDataType<M> fromPbiMessage<M extends GeneratedMessage>(PbiMessage<M> pbiMessage) {
+    return pbiMessage.withGeneric<MessageDataType>(
       <R extends GeneratedMessage>(pbiMessage) {
         return ComposedMessageDataType<R>.dataTypeBits(
           dataTypeBits: DataTypeBits.of(
@@ -225,7 +226,7 @@ abstract class MessageDataType<M extends GeneratedMessage>
           pbiMessageCalc: pbiMessage.calc,
         );
       },
-    );
+    ) as MessageDataType<M>;
   }
 }
 

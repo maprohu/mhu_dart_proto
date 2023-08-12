@@ -495,8 +495,9 @@ class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
 
   F ensure(M message) => message.$_ensure(index);
 
+  late final _defaultMessage = (fieldInfo.subBuilder!()..freeze()) as F;
   @override
-  F get defaultSingleValue => fieldInfo.subBuilder!() as F;
+  F get defaultSingleValue => _defaultMessage;
 
   @override
   EnsureAttribute<M, F> get ensureAttribute => ensure;

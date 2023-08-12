@@ -41,7 +41,7 @@ class _PbiRegistry {
     }
   }
 
-  final _msgCalc = Cache(PbiMessageCalc.new);
+  final _msgCalc = Cache<PbiMessage, PbiMessageCalc>((msg) => msg._calc());
   final _fieldCalc = Cache(PbiConcreteFieldCalc.new);
   final _oneofCalc = Cache(PbiOneofCalc.new);
 

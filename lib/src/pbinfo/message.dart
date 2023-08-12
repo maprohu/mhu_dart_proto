@@ -40,6 +40,8 @@ class PbiMessage<M extends GeneratedMessage> {
   ) {
     return fn(this);
   }
+
+  PbiMessageCalc<M> _calc() => PbiMessageCalc._(this);
 }
 
 extension MessageGetDefaultX<M extends GeneratedMessage> on M {
@@ -58,18 +60,21 @@ extension PbiGeneratedMessageX<M extends GeneratedMessage> on M {
   PbiMessage<M> get pbi => _registry._msgByType[runtimeType]!.cast();
 }
 
+PbiMessage<M> lookupPbiMessageOf<M extends GeneratedMessage>() =>
+    lookupPbiMessage(M) as PbiMessage<M>;
+
 PbiMessage lookupPbiMessage(Type messageType) =>
     _registry._msgByType[messageType] ?? (throw messageType);
 
-extension PbiMessageX on PbiMessage {
-  PbiMessageCalc get calc => _registry._msgCalc(this);
+extension PbiMessageX<M extends GeneratedMessage> on PbiMessage<M> {
+  PbiMessageCalc<M> get calc => _registry._msgCalc(this) as PbiMessageCalc<M>;
 }
 
 @Has()
-class PbiMessageCalc {
-  final PbiMessage msg;
+class PbiMessageCalc<M extends GeneratedMessage> {
+  final PbiMessage<M> msg;
 
-  PbiMessageCalc(this.msg);
+  PbiMessageCalc._(this.msg);
 
   BuilderInfo get builderInfo => msg.builderInfo;
 
