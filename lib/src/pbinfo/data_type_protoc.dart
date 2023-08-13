@@ -27,6 +27,12 @@ typedef ClearFieldValue = void Function(
   TagNumberValue concreteFieldCalc,
 );
 
+@Has()
+typedef EnsureFieldValue<F> = F Function(
+  GeneratedMessage message,
+  int fieldIndex,
+);
+
 ReadFieldValue<F> _getN<F>() {
   return (message, fieldIndex) => message.$_getN(fieldIndex);
 }
@@ -53,6 +59,10 @@ ReadFieldValue<List<F>> _getList<F>() {
 
 ReadFieldValue<Map<K, V>> _getMap<K, V>() {
   return (message, fieldIndex) => message.$_getMap(fieldIndex);
+}
+
+EnsureFieldValue<F> _ensure<F>() {
+  return (message, fieldIndex) => message.$_ensure(fieldIndex);
 }
 
 extension HasReadFieldValueX<F> on HasReadFieldValue<F> {

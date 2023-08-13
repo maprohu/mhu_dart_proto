@@ -16,23 +16,46 @@ extension RegistryConcreateFieldKeyX on ConcreteFieldKey {
 
 extension ConcreteFieldKeyX on ConcreteFieldKey {
   @Deprecated('use concreteFieldCalc instead')
+
   /// use [concreteFieldCalc] instead
   PbiConcreteFieldCalc get calc => _registry._fieldCalc.get(this);
-  ConcreteFieldCalc get concreteFieldCalc => _registry._concreteFieldCalc.get(this);
+
+  ConcreteFieldCalc get concreteFieldCalc =>
+      _registry._concreteFieldCalc.get(this);
 }
 
-class PbiConcreteFieldCalc {
+class PbiConcreteFieldCalc<M extends GeneratedMessage, F> {
   final ConcreteFieldKey fieldKey;
+  final PbiMessage<M> pbiMessage;
+  final DataType<F> dataType;
+  final FieldInfo<F> fieldInfo;
 
-  PbiConcreteFieldCalc(this.fieldKey);
+  PbiConcreteFieldCalc._({
+    required this.fieldKey,
+    required this.pbiMessage,
+    required this.dataType,
+    required this.fieldInfo,
+  });
+
+  static PbiConcreteFieldCalc create(ConcreteFieldKey fieldKey) {
+    final messageType = fieldKey.messageType;
+    final pbiMessage = lookupPbiMessage(messageType);
+    final fieldInfo = pbiMessage.builderInfo.fieldInfo[fieldKey.tagNumber]!;
+    final dataType = DataType.of(fieldInfo: fieldInfo);
+
+    return pbiMessage.withGeneric(<M extends GeneratedMessage>(pbiMessage) {
+      return dataType.dataTypeGeneric(<F>() {
+        return PbiConcreteFieldCalc<M, F>._(
+          fieldKey: fieldKey,
+          pbiMessage: pbiMessage,
+          dataType: dataType as DataType<F>,
+          fieldInfo: fieldInfo as FieldInfo<F>,
+        );
+      });
+    });
+  }
 
   Type get messageType => fieldKey.messageType;
-
-  late final message = lookupPbiMessage(messageType);
-
-  late final fieldInfo = message.builderInfo.fieldInfo[fieldKey.tagNumber]!;
-
-  late final dataType = DataType.of(fieldInfo: fieldInfo);
 
   String get name => fieldInfo.name;
 
@@ -40,7 +63,7 @@ class PbiConcreteFieldCalc {
 
   int get tagNumber => fieldInfo.tagNumber;
 
-  late final access = fieldInfo.accessForMessage(message);
+  late final FieldAccess access = fieldInfo.access<M>();
 
   late final defaultSingleValue = access.defaultSingleValue;
 

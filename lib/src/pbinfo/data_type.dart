@@ -123,6 +123,13 @@ sealed class DataType<T> implements DataTypeBits<T> {
   }
 }
 
+extension DataTypeX<T> on DataType<T> {
+  R dataTypeGenericCast<R>(R Function<TT>(DataType<TT> dataType) fn) =>
+      dataTypeGeneric(
+        <TT>() => fn(this as DataType<TT>),
+      );
+}
+
 @Compose()
 abstract class ScalarDataTypeBits<T> implements HasWriteFieldValue<T> {}
 
@@ -183,6 +190,22 @@ extension ScalarDataTypeX<T> on ScalarDataType<T> {
       },
     );
   }
+
+  ScalarAttribute<M, T> scalarAttribute<M extends GeneratedMessage>({
+    required FieldCoordinates fieldCoordinates,
+  }) {
+    final readAttribute = readFieldValueFor(fieldCoordinates.fieldIndex);
+    final writeAttribute = writeFieldValueFor(fieldCoordinates);
+    final existsAttribute =
+        existsFieldValueFor(fieldCoordinates.tagNumberValue);
+    final clearAttribute = clearFieldValueFor(fieldCoordinates.tagNumberValue);
+    return ComposedScalarAttribute(
+      readAttribute: readAttribute,
+      writeAttribute: writeAttribute,
+      clearAttribute: clearAttribute,
+      existsAttribute: existsAttribute,
+    );
+  }
 }
 
 @Compose()
@@ -204,8 +227,9 @@ abstract class MessageDataType<M extends GeneratedMessage>
         DataTypeBits<M>,
         ScalarDataTypeBits<M>,
         ScalarDataType<M>,
+        HasEnsureFieldValue<M>,
         HasPbiMessage<M>,
-        HasPbiMessageCalc {
+        HasPbiMessageCalc<M> {
   static MessageDataType of({
     required FieldInfo fieldInfo,
   }) {
@@ -213,7 +237,8 @@ abstract class MessageDataType<M extends GeneratedMessage>
     return fromPbiMessage(defaultValue.pbi);
   }
 
-  static MessageDataType<M> fromPbiMessage<M extends GeneratedMessage>(PbiMessage<M> pbiMessage) {
+  static MessageDataType<M> fromPbiMessage<M extends GeneratedMessage>(
+      PbiMessage<M> pbiMessage) {
     return pbiMessage.withGeneric<MessageDataType>(
       <R extends GeneratedMessage>(pbiMessage) {
         return ComposedMessageDataType<R>.dataTypeBits(
@@ -224,6 +249,7 @@ abstract class MessageDataType<M extends GeneratedMessage>
           writeFieldValue: _setField(),
           pbiMessage: pbiMessage,
           pbiMessageCalc: pbiMessage.calc,
+          ensureFieldValue: _ensure(),
         );
       },
     ) as MessageDataType<M>;
@@ -239,6 +265,20 @@ extension MessageDataTypeX<M extends GeneratedMessage> on MessageDataType<M> {
     return pbiMessage.withGeneric(
       <TT extends GeneratedMessage>(pbiMessage) => fn(
         this as MessageDataType<TT>,
+      ),
+    );
+  }
+
+  MessageAttribute<MM, M> messageAttribute<MM extends GeneratedMessage>({
+    required FieldCoordinates fieldCoordinates,
+  }) {
+    return ComposedMessageAttribute.scalarAttribute(
+      scalarAttribute: scalarAttribute(
+        fieldCoordinates: fieldCoordinates,
+      ),
+      ensureAttribute: (message) => ensureFieldValue(
+        message,
+        fieldCoordinates.fieldIndex,
       ),
     );
   }

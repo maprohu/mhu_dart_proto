@@ -71,7 +71,8 @@ extension PbiMessageX<M extends GeneratedMessage> on PbiMessage<M> {
 }
 
 @Has()
-class PbiMessageCalc<M extends GeneratedMessage> {
+class PbiMessageCalc<M extends GeneratedMessage>
+    implements MessageUpdateBits<M> {
   final PbiMessage<M> msg;
 
   PbiMessageCalc._(this.msg);
@@ -133,4 +134,13 @@ class PbiMessageCalc<M extends GeneratedMessage> {
       .toIList();
 
   late final oneofFieldCalcs = oneofFieldKeys.map((e) => e.calc).toIList();
+
+  @override
+  M get defaultMessage => msg.instance;
+
+  @override
+  RebuildMessage<M> get rebuildMessage => _rebuildMessage;
+
+  M _rebuildMessage(M message, void Function(M message) updates) =>
+      message.rebuild(updates);
 }

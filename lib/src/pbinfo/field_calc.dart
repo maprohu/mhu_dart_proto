@@ -13,39 +13,61 @@ typedef FieldDataType<T> = DataType<T>;
 @Has()
 typedef MessageType<M extends GeneratedMessage> = Type;
 
-mixin FieldCalcMixin implements HasFieldKey {
-  late final messageType = fieldKey.messageType;
-  late final pbiMessage = lookupPbiMessage(messageType);
-}
-
 @Compose()
-abstract base class FieldCalc with FieldCalcMixin implements HasFieldKey {
-  static FieldCalc of(FieldKey fieldKey) =>
-      ComposedFieldCalc(fieldKey: fieldKey);
-}
+abstract base class FieldCalc<M extends GeneratedMessage, F>
+    implements HasFieldKey, HasPbiMessage<M> {}
 
-mixin ConcreteFieldCalcMixin on FieldCalcMixin
-    implements HasConcreteFieldKey, FieldCoordinates {
+base mixin ConcreteFieldCalcMixin<M extends GeneratedMessage, F>
+    implements
+        FieldCalc<M, F>,
+        HasFieldInfo,
+        HasConcreteFieldKey,
+        FieldCoordinates {
   @override
   late final tagNumberValue = concreteFieldKey.tagNumber;
-
-  late final fieldInfo = pbiMessage.builderInfo.fieldInfo[tagNumberValue]!;
-
-  late final DataType dataType = DataType.of(fieldInfo: fieldInfo);
 
   late final protoName = fieldInfo.protoName;
 
   @override
   late final fieldIndex = fieldInfo.index!;
+
+  late final pbiMessageCalc = pbiMessage.calc;
+
+  R concreteFieldCalcGeneric<R>(
+    R Function<MM extends GeneratedMessage, FF>(
+      ConcreteFieldCalc<MM, FF> concreteFieldCalc,
+    ) fn,
+  ) {
+    return fn(
+      this as ConcreteFieldCalc<M, F>,
+    );
+  }
 }
 
 @Compose()
-abstract base class ConcreteFieldCalc
-    with FieldCalcMixin, ConcreteFieldCalcMixin
-    implements FieldCalc, HasConcreteFieldKey {
-  static ConcreteFieldCalc of(ConcreteFieldKey fieldKey) =>
-      ComposedConcreteFieldCalc(
-        fieldKey: fieldKey,
-        concreteFieldKey: fieldKey,
-      );
+abstract base class ConcreteFieldCalc<M extends GeneratedMessage, F>
+    with ConcreteFieldCalcMixin<M, F>
+    implements
+        FieldCalc<M, F>,
+        HasConcreteFieldKey,
+        HasDataType<F>,
+        HasFieldInfo {
+  static ConcreteFieldCalc create(ConcreteFieldKey fieldKey) {
+    final messageType = fieldKey.messageType;
+    final pbiMessage = lookupPbiMessage(messageType);
+    final fieldInfo = pbiMessage.builderInfo.fieldInfo[fieldKey.tagNumber]!;
+    final dataType = DataType.of(fieldInfo: fieldInfo);
+
+    return pbiMessage.withGeneric(<M extends GeneratedMessage>(pbiMessage) {
+      return dataType.dataTypeGeneric(<F>() {
+        return ComposedConcreteFieldCalc<M, F>(
+          concreteFieldKey: fieldKey,
+          fieldKey: fieldKey,
+          pbiMessage: pbiMessage,
+          dataType: dataType as DataType<F>,
+          fieldInfo: fieldInfo,
+        );
+      });
+    });
+  }
 }

@@ -42,15 +42,15 @@ class _PbiRegistry {
   }
 
   final _msgCalc = Cache<PbiMessage, PbiMessageCalc>((msg) => msg._calc());
-  final _fieldCalc = Cache(PbiConcreteFieldCalc.new);
+  final _fieldCalc = Cache(PbiConcreteFieldCalc.create);
   final _oneofCalc = Cache(PbiOneofCalc.new);
 
-  final _topFieldCalc = Cache(FieldCalc.of);
-  final _concreteFieldCalc = Cache(ConcreteFieldCalc.of);
+  // final _topFieldCalc = Cache(FieldCalc.of);
+  final _concreteFieldCalc = Cache(ConcreteFieldCalc.create);
 }
 
 extension TopFieldKeyX on FieldKey {
-  FieldCalc get fieldCalc => _registry._topFieldCalc.get(this);
+  // FieldCalc get fieldCalc => _registry._topFieldCalc.get(this);
 }
 
 final _registry = _PbiRegistry.instance;
