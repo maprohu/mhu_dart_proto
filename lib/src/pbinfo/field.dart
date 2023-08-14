@@ -28,7 +28,7 @@ class PbiConcreteFieldCalc<M extends GeneratedMessage, F> {
   final ConcreteFieldKey fieldKey;
   final PbiMessage<M> pbiMessage;
   final DataType<F> dataType;
-  final FieldInfo<F> fieldInfo;
+  final FieldInfo fieldInfo;
 
   PbiConcreteFieldCalc._({
     required this.fieldKey,
@@ -49,7 +49,7 @@ class PbiConcreteFieldCalc<M extends GeneratedMessage, F> {
           fieldKey: fieldKey,
           pbiMessage: pbiMessage,
           dataType: dataType as DataType<F>,
-          fieldInfo: fieldInfo as FieldInfo<F>,
+          fieldInfo: fieldInfo,
         );
       });
     });

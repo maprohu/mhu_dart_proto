@@ -128,6 +128,22 @@ extension DataTypeX<T> on DataType<T> {
       dataTypeGeneric(
         <TT>() => fn(this as DataType<TT>),
       );
+
+  ReadAttribute<M, T> readAttribute<M extends GeneratedMessage>({
+    required FieldCoordinates fieldCoordinates,
+  }) {
+    return readFieldValueFor(fieldCoordinates.fieldIndex);
+  }
+
+  HasReadAttribute<M, T> hasReadAttribute<M extends GeneratedMessage>({
+    required FieldCoordinates fieldCoordinates,
+  }) {
+    return ComposedReadAttribute(
+      readAttribute: readAttribute(
+        fieldCoordinates: fieldCoordinates,
+      ),
+    );
+  }
 }
 
 @Compose()
@@ -156,7 +172,9 @@ extension ScalarDataTypeX<T> on ScalarDataType<T> {
   }) {
     final scalarDataType = this;
 
-    final read = scalarDataType.readFieldValueFor(fieldCoordinates.fieldIndex);
+    final read = readAttribute(
+      fieldCoordinates: fieldCoordinates,
+    );
     final write = scalarDataType.writeFieldValueFor(fieldCoordinates);
     final exists =
         scalarDataType.existsFieldValueFor(fieldCoordinates.tagNumberValue);
@@ -194,13 +212,14 @@ extension ScalarDataTypeX<T> on ScalarDataType<T> {
   ScalarAttribute<M, T> scalarAttribute<M extends GeneratedMessage>({
     required FieldCoordinates fieldCoordinates,
   }) {
-    final readAttribute = readFieldValueFor(fieldCoordinates.fieldIndex);
     final writeAttribute = writeFieldValueFor(fieldCoordinates);
     final existsAttribute =
         existsFieldValueFor(fieldCoordinates.tagNumberValue);
     final clearAttribute = clearFieldValueFor(fieldCoordinates.tagNumberValue);
     return ComposedScalarAttribute(
-      readAttribute: readAttribute,
+      readAttribute: readAttribute(
+        fieldCoordinates: fieldCoordinates,
+      ),
       writeAttribute: writeAttribute,
       clearAttribute: clearAttribute,
       existsAttribute: existsAttribute,
@@ -233,7 +252,7 @@ abstract class MessageDataType<M extends GeneratedMessage>
   static MessageDataType of({
     required FieldInfo fieldInfo,
   }) {
-    final GeneratedMessage defaultValue = fieldInfo.makeDefault!();
+    final GeneratedMessage defaultValue = fieldInfo.subBuilder!();
     return fromPbiMessage(defaultValue.pbi);
   }
 
@@ -434,6 +453,8 @@ typedef MapValueDataType<V> = ScalarDataType<V>;
 
 @Has()
 typedef MapKeyComparator<K> = Comparator<K>;
+
+
 
 @Compose()
 @Has()

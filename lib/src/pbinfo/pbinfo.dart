@@ -11,6 +11,8 @@ part 'pbgen.dart';
 part 'pbinfo.g.has.dart';
 // part 'pbinfo.g.compose.dart';
 
+typedef Msg = GeneratedMessage;
+
 extension FieldInfoX on FieldInfo<dynamic> {
   int get singleValueType => type & _optionalTypes;
 
@@ -285,7 +287,7 @@ extension FieldAccessX<M extends GeneratedMessage, F, S>
 }
 
 sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
-    extends FieldAccess<M, F, F> implements ReadWriteAttribute<M, F> {
+    extends FieldAccess<M, F, F> implements ScalarAttribute<M, F> {
   @override
   final FieldInfo fieldInfo;
 
@@ -321,6 +323,13 @@ sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
 
   @override
   WriteAttribute<M, F> get writeAttribute => set;
+
+  @override
+  ClearAttribute<M> get clearAttribute => clear;
+
+  @override
+  ExistsAttribute<M> get existsAttribute => has;
+
 }
 
 extension ScalarFieldAccessX<M extends GeneratedMessage, F>
@@ -482,7 +491,7 @@ class FloatFieldAccess<M extends GeneratedMessage>
 }
 
 class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
-    extends ScalarFieldAccess<M, F> implements ReadEnsureAttribute<M, F> {
+    extends ScalarFieldAccess<M, F> implements MutableAttribute<M, F> {
   MessageFieldAccess(
     super.fieldRef, {
     super.unsafe,
@@ -501,6 +510,9 @@ class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
 
   @override
   EnsureAttribute<M, F> get ensureAttribute => ensure;
+
+  @override
+  ExistsAttribute<M> get existsAttribute => has;
 }
 
 extension MessageFieldAccessX<M extends GeneratedMessage,
