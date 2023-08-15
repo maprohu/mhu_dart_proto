@@ -33,6 +33,8 @@ base mixin ConcreteFieldCalcMixin<M extends GeneratedMessage, F>
 
   late final pbiMessageCalc = pbiMessage.calc;
 
+  late final fieldAccess = fieldInfo.access<M>() as FieldAccess<M, F, dynamic>;
+
   R concreteFieldCalcGeneric<R>(
     R Function<MM extends GeneratedMessage, FF>(
       ConcreteFieldCalc<MM, FF> concreteFieldCalc,

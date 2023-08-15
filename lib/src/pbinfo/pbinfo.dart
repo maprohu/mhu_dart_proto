@@ -264,6 +264,16 @@ sealed class FieldAccess<M extends GeneratedMessage, F, S>
         messageType: M,
         tagNumber: tagNumber,
       );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FieldAccess &&
+          runtimeType == other.runtimeType &&
+          fieldInfo == other.fieldInfo;
+
+  @override
+  int get hashCode => fieldInfo.hashCode;
 }
 
 extension FieldAccessX<M extends GeneratedMessage, F, S>
