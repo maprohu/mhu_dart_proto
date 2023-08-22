@@ -13,7 +13,7 @@ extension PbiPbFrX<M extends GeneratedMessage> on PbFr<M> {
       FR Function(Fr<F> item, {DspReg? disposers}) wrap,
       ) {
     return wrap(
-      access.fr(
+      access.frWarm(
         fv$,
         disposers: _disposers,
       ),
@@ -26,7 +26,7 @@ extension PbiPbFrX<M extends GeneratedMessage> on PbFr<M> {
       FR Function(Fr<F> item, {DspReg? disposers}) wrap,
       ) {
     return CachedFr.list(
-      fv: access.fr(
+      fv: access.frWarm(
         fv$,
         disposers: _disposers,
       ),
@@ -43,7 +43,7 @@ extension PbiPbFrX<M extends GeneratedMessage> on PbFr<M> {
       FR Function(Fr<F> item, {DspReg? disposers}) wrap,
       ) {
     return CachedFr.map(
-      fv: access.fr(
+      fv: access.frWarm(
         fv$,
         disposers: _disposers,
       ),

@@ -284,14 +284,19 @@ extension FieldAccessX<M extends GeneratedMessage, F, S>
 
   String get name => fieldInfo.name;
 
-  Fr<F> fr(
+  Fr<F> frWarm(
     Fr<M> message, {
     DspReg? disposers,
-  }) =>
-      commons.fr(
+  }) {
+    if (disposers != null) {
+      return commons.frHot(
         () => get(message()),
         disposers: disposers,
       );
+    } else {
+      return message.map(get);
+    }
+  }
 
   bool get isMessageValue => defaultSingleValue is GeneratedMessage;
 }
@@ -339,7 +344,6 @@ sealed class ScalarFieldAccess<M extends GeneratedMessage, F>
 
   @override
   ExistsAttribute<M> get existsAttribute => has;
-
 }
 
 extension ScalarFieldAccessX<M extends GeneratedMessage, F>
@@ -359,7 +363,7 @@ extension ScalarFieldAccessX<M extends GeneratedMessage, F>
     DspReg? disposers,
   }) =>
       commons.frw(
-        this.fr(message, disposers: disposers),
+        frWarm(message, disposers: disposers),
         (v) => setFw(message, v),
       );
 
@@ -515,6 +519,7 @@ class MessageFieldAccess<M extends GeneratedMessage, F extends GeneratedMessage>
   F ensure(M message) => message.$_ensure(index);
 
   late final _defaultMessage = (fieldInfo.subBuilder!()..freeze()) as F;
+
   @override
   F get defaultSingleValue => _defaultMessage;
 

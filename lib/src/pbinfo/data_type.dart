@@ -17,8 +17,6 @@ GenericFunction1<B> genericFunction1<B, T extends B>() => <R>(fn) => fn<T>();
 @Has()
 typedef DataTypeGeneric<T> = GenericFunction1<T>;
 
-@Has()
-typedef DefaultValue<T> = T;
 
 @Compose()
 abstract class DataTypeBits<T>
