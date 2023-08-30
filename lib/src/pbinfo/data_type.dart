@@ -3,16 +3,15 @@ import 'package:mhu_dart_annotation/mhu_dart_annotation.dart';
 import 'package:mhu_dart_commons/commons.dart';
 import 'package:mhu_dart_proto/mhu_dart_proto.dart';
 import 'package:protobuf/protobuf.dart';
-
+import 'data_type.dart' as $lib;
 part 'data_type.g.has.dart';
+part 'data_type.g.dart';
 
-part 'data_type.g.compose.dart';
+
 
 part 'data_type_protoc.dart';
 
-typedef GenericFunction1<T> = R Function<R>(R Function<TT extends T>() fn);
 
-GenericFunction1<B> genericFunction1<B, T extends B>() => <R>(fn) => fn<T>();
 
 @Has()
 typedef DataTypeGeneric<T> = GenericFunction1<T>;

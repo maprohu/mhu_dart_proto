@@ -284,6 +284,8 @@ extension FieldAccessX<M extends GeneratedMessage, F, S>
 
   String get name => fieldInfo.name;
 
+  String get protoName => fieldInfo.protoName;
+
   Fr<F> frWarm(
     Fr<M> message, {
     DspReg? disposers,

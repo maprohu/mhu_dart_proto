@@ -2,11 +2,11 @@ import 'package:mhu_dart_annotation/mhu_dart_annotation.dart';
 import 'package:mhu_dart_proto/mhu_dart_proto.dart';
 import 'package:protobuf/protobuf.dart';
 
-import 'data_type.dart';
+import 'field_calc.dart' as $lib;
 
 part 'field_calc.g.has.dart';
 
-part 'field_calc.g.compose.dart';
+part 'field_calc.g.dart';
 
 typedef FieldDataType<T> = DataType<T>;
 

@@ -1,5 +1,7 @@
 part of 'data_type.dart';
 
+@Compose()
+@Has()
 abstract class FieldCoordinates implements HasFieldIndex, HasTagNumberValue {}
 
 @Has()
@@ -11,20 +13,20 @@ typedef ReadFieldValue<F> = F Function(
 @Has()
 typedef WriteFieldValue<F> = void Function(
   GeneratedMessage message,
-  FieldCoordinates concreteFieldCalc,
+  FieldCoordinates fieldCoordinates,
   F value,
 );
 
 @Has()
 typedef ExistsFieldValue = bool Function(
   GeneratedMessage message,
-  TagNumberValue concreteFieldCalc,
+  TagNumberValue tagNumberValue,
 );
 
 @Has()
 typedef ClearFieldValue = void Function(
   GeneratedMessage message,
-  TagNumberValue concreteFieldCalc,
+  TagNumberValue tagNumberValue,
 );
 
 @Has()
