@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:mhu_dart_annotation/mhu_dart_annotation.dart';
@@ -5,8 +7,14 @@ import 'package:mhu_dart_commons/commons.dart';
 import 'package:mhu_dart_proto/src/pbinfo/data_type.dart';
 import 'package:protobuf/protobuf.dart';
 
+import '../descriptor/descriptor.pb.dart';
 import 'field_calc.dart';
 import 'pbinfo.dart';
+
+import 'registry.dart' as $lib;
+
+// part 'registry.g.has.dart';
+part 'registry.g.dart';
 
 part 'message.dart';
 
@@ -17,8 +25,6 @@ part 'enum.dart';
 part 'oneof.dart';
 
 part 'registry.g.has.dart';
-// part 'registry.g.compose.dart';
-
 
 class _PbiRegistry {
   _PbiRegistry._();
@@ -60,12 +66,14 @@ class PbiLib {
   final Iterable<PbiMessage> messages;
   final Iterable<PbiEnum> enums;
   final Iterable<PbiLib> importedLibraries;
+  final String fileDescriptorSetBase64;
 
   PbiLib({
     required this.name,
     required this.messages,
     required this.enums,
     required this.importedLibraries,
+    required this.fileDescriptorSetBase64,
   }) {
     _PbiRegistry.instance.register(this);
   }
@@ -78,4 +86,16 @@ class PbiLib {
 
   Iterable<PbiLib> get allImportedLibraries =>
       importedLibraries.expand((element) => element.allLibs).distinct();
+
+  late final fileDescriptorSet = this.pbiLibFileDescriptorSet();
+}
+
+FileDescriptorSet pbiLibFileDescriptorSet({
+  @ext required PbiLib pbiLib,
+}) {
+  return FileDescriptorSet.fromBuffer(
+    base64.decode(
+      pbiLib.fileDescriptorSetBase64,
+    ),
+  )..freeze();
 }
