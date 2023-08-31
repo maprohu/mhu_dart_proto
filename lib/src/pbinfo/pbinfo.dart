@@ -41,8 +41,12 @@ extension FieldInfoX on FieldInfo<dynamic> {
     if (!unsafe) {
       assert(M != GeneratedMessage);
     }
-    RepeatedFieldAccess<M, F> repeated<F>() =>
-        RepeatedFieldAccess(cast(), unsafe: unsafe);
+    RepeatedFieldAccess<M, F> repeated<F>() {
+      return RepeatedFieldAccess(
+        cast(),
+        unsafe: unsafe,
+      );
+    }
 
     switch (type) {
       case PbFieldType.OD:
@@ -634,6 +638,9 @@ class RepeatedFieldAccess<M extends GeneratedMessage, F>
 
   @override
   F get defaultSingleValue {
+    if (F == Int64) {
+      return Int64.ZERO as F;
+    }
     final maker = FieldInfo.findMakeDefault(
       fieldInfo.type & _optionalTypes,
       fieldInfo.subBuilder ?? fieldInfo.defaultEnumValue,
